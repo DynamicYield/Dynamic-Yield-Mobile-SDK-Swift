@@ -1,0 +1,62 @@
+//
+//  CurrencyType.swift
+//  DYLibrary
+//
+//  Created by Miri Kutainer on 05/06/2023.
+//
+
+import Foundation
+
+public enum CurrencyType: String, Codable {
+    case usd = "USD"
+    case eur = "EUR"
+    case gbp = "GBP"
+    case jpy = "JPY"
+    case ils = "ILS"
+    case aed = "AED"
+    case aud = "AUD"
+    case bam = "BAM"
+    case bgn = "BGN"
+    case bnd = "BND"
+    case brl = "BRL"
+    case byr = "BYR"
+    case cad = "CAD"
+    case chf = "CHF"
+    case clp = "CLP"
+    case cny = "CNY"
+    case cop = "COP"
+    case czk = "CZK"
+    case dkk = "DKK"
+    case egp = "EGP"
+    case gel = "GEL"
+    case hkd = "HKD"
+    case hrk = "HRK"
+    case huf = "HUF"
+    case idr = "IDR"
+    case inr = "INR"
+    case isk = "ISK"
+    case jod = "JOD"
+    case krw = "KRW"
+    case kwd = "KWD"
+    case kzt = "KZT"
+    case lkr = "LKR"
+    case mxn = "MXN"
+    case myr = "MYR"
+    case nok = "NOK"
+    case nzd = "NZD"
+    case php = "PHP"
+    case pkr = "PKR"
+    case pln = "PLN"
+    case ron = "RON"
+    case rsd = "RSD"
+    case rub = "RUB"
+    case sar = "SAR"
+    case sek = "SEK"
+    case sgd = "SGD"
+    case thb = "THB"
+    case trk = "TRK"
+    case twd = "TWD"
+    case uah = "UAH"
+    case vnd = "VND"
+    case zar = "ZAR"
+}
