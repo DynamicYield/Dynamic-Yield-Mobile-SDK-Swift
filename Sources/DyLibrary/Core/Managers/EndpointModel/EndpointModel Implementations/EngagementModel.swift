@@ -42,7 +42,7 @@ class EngagementModel: EndpointModelProtocol {
     func getPayload() throws -> Data? {
         let device = Device(ip: endpointModelProvider.getExperienceConfig().ip, addDateTime: false)
 
-        let engagementsPayload = EngagementsPayload(user: endpointModelProvider.getUser(), session: endpointModelProvider.getSession(), context: Context(
+        let engagementsPayload = EngagementsPayload(user: endpointModelProvider.getUser(cuid: nil, cuidType: nil), session: endpointModelProvider.getSession(), context: Context(
             device: device,
             branch: dayPart != nil && branchId != nil ? Branch(
                 id: branchId,

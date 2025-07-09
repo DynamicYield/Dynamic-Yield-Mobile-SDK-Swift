@@ -277,39 +277,31 @@ public class EventsManager: EndpointManagerProtocol {
         )
     }
 
-    public func reportMessageOptInEvent(
+    public func reportPushOptInEvent(
         eventName: String,
-        cuidType: CuidType,
-        plainTextEmail: String? = nil,
-        externalId: String? = nil
+        pushId: String
     ) async -> DYResult {
         logger.log(#function)
         return await reportEvents(
             events: DYEvent(
                 eventName: eventName,
-                properties: MessageOptInEventProperties(
-                    cuidType: cuidType,
-                    plainTextEmail: plainTextEmail,
-                    externalId: externalId
+                properties: PushOptInProperties(
+                    pushId: pushId
                 )
             )
         )
     }
 
-    public func reportMessageOptOutEvent(
+    public func reportPushOptOutEvent(
         eventName: String,
-        cuidType: CuidType,
-        plainTextEmail: String? = nil,
-        externalId: String? = nil
+        pushId: String
     ) async -> DYResult {
         logger.log(#function)
         return await reportEvents(
             events: DYEvent(
                 eventName: eventName,
-                properties: MessageOptOutEventProperties(
-                    cuidType: cuidType,
-                    plainTextEmail: plainTextEmail,
-                    externalId: externalId
+                properties: PushOptOutProperties(
+                    pushId: pushId
                 )
             )
         )

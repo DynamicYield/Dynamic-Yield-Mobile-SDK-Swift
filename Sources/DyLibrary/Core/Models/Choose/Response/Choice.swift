@@ -63,12 +63,20 @@ public class Choice: Decodable, CustomStringConvertible {
                         slot.variationId = self.id
                     }
                 }
+            case .sortingDecision:
+                variation = try variationsContainer.decode(SortingVariation.self)
+                if let sortingPayload = variation?.payload as? SortingPayload {
+                    sortingPayload.data.slots.forEach { slot in
+                        slot.variationId = self.id
+                    }
+                }
             }
 
             if let variation = variation {
                 variation.decisionId = self.decisionId
                 self.variations.append(variation)
             }
+
         }
     }
 

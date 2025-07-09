@@ -41,6 +41,8 @@ public class Variation: Decodable, CustomStringConvertible {
             self.payload = try container.decode(RecsPayload.self, forKey: .payload)
         case .storeRecs:
             self.payload = try container.decode(StoreRecsPayload.self, forKey: .payload)
+        case .sorting:
+            self.payload = try container.decode(SortingPayload.self, forKey: .payload)
         }
     }
 
@@ -63,5 +65,26 @@ public class RecsVariation: Variation {
 }
 
 public class StoreRecsVariation: Variation {
+
+    public let title: String?
+    public let name: String?
+
+    private enum CodingKeys: CodingKey {
+        case title
+        case name
+
+    }
+
+    public required init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.title = try container.decodeIfPresent(String.self, forKey: .title)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+
+        try super.init(from: decoder)
+    }
+}
+
+public class SortingVariation: Variation {
 
 }

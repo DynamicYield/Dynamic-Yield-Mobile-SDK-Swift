@@ -8,6 +8,6 @@
 import Foundation
 
 public enum CuidType: String, Codable {
-    case email
-    case external
+    case email = "EMAIL"
+    case external = "EXTRNAL"
 }

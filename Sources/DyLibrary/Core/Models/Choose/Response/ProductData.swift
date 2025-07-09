@@ -4,6 +4,7 @@
 //
 //  Created by Miri Kutainer on 28/10/2024.
 //
+import Foundation
 
 public protocol ProductData: Decodable { }
 
@@ -22,16 +23,21 @@ public class StoreRecsProductData: ProductData {
     }
 }
 
+public class SortingRecsProductData: ProductData {
+
+}
+
 public class DefaultRecsProductData: RecsProductData {
-    let productType: ProductType?
-    let groupId: String?
-    let name: String?
-    let url: String?
-    let price: Float?
-    let inStock: Bool?
-    let imageUrl: String?
-    let categories: [String?]?
-    var keywords: [String?]?
+    public let productType: ProductType?
+    public let groupId: String?
+    public let name: String?
+    public let url: String?
+    public let price: Float?
+    public let inStock: Bool?
+    public let imageUrl: String?
+    public let categories: [String?]?
+    public var keywords: [String?]?
+    public var extra: [String: Any?] = [:]
 
     enum CodingKeys: String, CodingKey {
         case productType = "product_type"
@@ -56,6 +62,34 @@ public class DefaultRecsProductData: RecsProductData {
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         categories = try container.decodeIfPresent([String].self, forKey: .categories)
         keywords = try container.decodeIfPresent([String].self, forKey: .keywords)
+
+        let rawContainer = try decoder.container(keyedBy: AnyCodingKey.self)
+        for key in rawContainer.allKeys {
+            // Skip known fields
+            if CodingKeys(stringValue: key.stringValue) != nil { continue }
+
+            // Try to decode known types: String, Float
+             if let stringValue = try? rawContainer.decode(String.self, forKey: key) {
+                extra[key.stringValue] = stringValue
+            } else if let floatValue = try? rawContainer.decode(Float.self, forKey: key) {
+                extra[key.stringValue] = floatValue
+            } else {
+                extra[key.stringValue] = nil
+            }
+        }
+    }
+}
+
+struct AnyCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int? { return nil }
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+
+    init?(intValue: Int) {
+        return nil // Not supporting integer keys
     }
 }
 

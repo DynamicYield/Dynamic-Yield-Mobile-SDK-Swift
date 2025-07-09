@@ -8,7 +8,7 @@
 import Foundation
 
 public enum ResultStatus: String, Codable {
-    case success
-    case error
-    case warning
+    case success = "SUCCESS"
+    case error = "ERROR"
+    case warning = "WARNING"
 }

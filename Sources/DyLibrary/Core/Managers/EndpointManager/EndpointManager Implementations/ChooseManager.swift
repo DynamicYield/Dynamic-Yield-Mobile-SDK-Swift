@@ -51,10 +51,13 @@ public class ChooseManager: EndpointManagerProtocol {
         dayPart: DayPart? = nil,
         cart: [CartItem]? = nil,
         branchId: String? = nil,
+        orderFulfillment: OrderFulfillment? = nil,
         options: ChooseOptions? = nil,
         pageAttributes: [String: PageAttribute]? = nil,
         recsProductData: RecsProductDataOptions? = nil,
-        listedItems: [String]? = nil
+        listedItems: [String]? = nil,
+        cuid: String? = nil,
+        cuidType: String? = nil
     ) async -> DYChooseResult {
         logger.log("Choosing variations for page \(page.location)")
 
@@ -73,10 +76,13 @@ public class ChooseManager: EndpointManagerProtocol {
             dayPart: dayPart,
             cart: cart,
             branchId: branchId,
+            orderFulfillment: orderFulfillment,
             options: options,
             pageAttributes: pageAttributes,
             recsProductData: recsProductData,
-            listedItems: listedItems
+            listedItems: listedItems,
+            cuid: cuid,
+            cuidType: cuidType
         )
 
         return await sendRequest(endpoint: endpoint)

@@ -1,6 +1,7 @@
 import Foundation
 
 struct EndpointManagerProviderImplementation: EndpointManagerProvider {
+
     private var configManager: ConfigManager
     private var networkManager: NetworkManager
     private var sessionAndUserManager: SessionAndUserManager
@@ -21,8 +22,8 @@ struct EndpointManagerProviderImplementation: EndpointManagerProvider {
         sessionAndUserManager.getSession()
     }
 
-    func getUser() -> User {
-        sessionAndUserManager.getUser()
+    func getUser(cuid: String?, cuidType: String?) -> User {
+        sessionAndUserManager.getUser(cuid: cuid, cuidType: cuidType)
     }
 
     func getExperienceConfig() -> ExperienceConfig {

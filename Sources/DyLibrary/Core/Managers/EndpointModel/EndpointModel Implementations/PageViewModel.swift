@@ -54,7 +54,7 @@ class PageViewModel: EndpointModelProtocol {
 
         let choosePayloadData = ChoosePayload(
             session: endpointModelProvider.getSession(),
-            user: endpointModelProvider.getUser(),
+            user: endpointModelProvider.getUser(cuid: nil, cuidType: nil),
             context: context)
 
         return try endpointModelProvider.encodingPayload(payload: choosePayloadData)

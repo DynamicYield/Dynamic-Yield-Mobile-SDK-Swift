@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum DataCenter {
-    case us
-    case eu
+public enum DataCenter: String, Codable {
+    case us = "US"
+    case eu = "EU"
 }

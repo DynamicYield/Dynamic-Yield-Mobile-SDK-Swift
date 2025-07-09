@@ -3,13 +3,13 @@ import Foundation
 struct EndpointModelProviderImplementation: EndpointModelProvider {
 
     private let getSessionClosure: () -> Session
-    private let getUserClosure: () -> User
+    private let getUserClosure: (String?, String?) -> User
     private let getExperienceConfigClosure: () -> ExperienceConfig
     private let encodingPayloadClosure: (EndpointPayload) throws -> Data?
     private let decodingWarnings: (Data?) throws -> [Warning]?
     init(
         getSession: @escaping () -> Session,
-        getUser: @escaping () -> User,
+        getUser: @escaping (String?, String?) -> User,
         getExperienceConfig: @escaping () -> ExperienceConfig,
         encodingPayload: @escaping (EndpointPayload) throws -> Data?,
         decodingWarnings: @escaping (Data?) throws -> [Warning]?
@@ -25,8 +25,8 @@ struct EndpointModelProviderImplementation: EndpointModelProvider {
         getSessionClosure()
     }
 
-    func getUser() -> User {
-        getUserClosure()
+    func getUser(cuid: String? = nil, cuidType: String? = nil) -> User {
+        getUserClosure(cuid, cuidType)
     }
 
     func getExperienceConfig() -> ExperienceConfig {

@@ -12,6 +12,7 @@ public enum ChoiceType: String, Decodable {
     case recsDecision = "RECS_DECISION"
     case noDecision = "NO_DECISION"
     case storeRecsDecision = "STORE_RECS_DECISION"
+    case sortingDecision = "SORTING_DECISION"
 
     // Custom initializer for decoding
     public init(from decoder: Decoder) throws {
