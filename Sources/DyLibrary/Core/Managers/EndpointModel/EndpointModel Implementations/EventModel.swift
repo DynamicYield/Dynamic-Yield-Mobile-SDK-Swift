@@ -44,7 +44,7 @@ class EventModel: EndpointModelProtocol {
         let eventsPayload =
         EventsPayload(
             session: endpointModelProvider.getSession(),
-            user: endpointModelProvider.getUser(),
+            user: endpointModelProvider.getUser(cuid: nil, cuidType: nil),
             context: Context(
                 device: device,
                 channel: endpointModelProvider.getExperienceConfig().channel

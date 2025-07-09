@@ -54,3 +54,18 @@ public class StoreRecsSlot: Slot {
         try super.init(from: decoder)
     }
 }
+
+public class SortingRecsSlot: Slot {
+
+    public var productData: SortingRecsProductData
+
+    private enum CodingKeys: CodingKey {
+        case productData
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.productData = try container.decode(SortingRecsProductData.self, forKey: .productData)
+        try super.init(from: decoder)
+    }
+}

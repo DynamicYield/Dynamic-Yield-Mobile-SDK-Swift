@@ -20,10 +20,13 @@ public class ChooseModel: EndpointModelProtocol {
     private let dayPart: DayPart?
     private let cart: [CartItem]?
     private let branchId: String?
+    private let orderFulfillment: OrderFulfillment?
     private let options: ChooseOptions?
     private let pageAttributes: [String: PageAttribute]?
     private let recsProductData: RecsProductDataOptions?
     private let listedItems: [String]?
+    private let cuid: String?
+    private let cuidType: String?
     private let addDeviceDateTime: Bool
 
     public init(
@@ -35,11 +38,14 @@ public class ChooseModel: EndpointModelProtocol {
         dayPart: DayPart? = nil,
         cart: [CartItem]? = nil,
         branchId: String? = nil,
+        orderFulfillment: OrderFulfillment? = nil,
         options: ChooseOptions? = nil,
         pageAttributes: [String: PageAttribute]? = nil,
         recsProductData: RecsProductDataOptions? = nil,
         listedItems: [String]? = nil,
-        addDeviceDateTime: Bool = true
+        addDeviceDateTime: Bool = true,
+        cuid: String? = nil,
+        cuidType: String? = nil
     ) {
         self.endpointModelProvider = endpointModelProvider
         self.selectorNames = selectorNames
@@ -49,11 +55,14 @@ public class ChooseModel: EndpointModelProtocol {
         self.dayPart = dayPart
         self.cart = cart
         self.branchId = branchId
+        self.orderFulfillment = orderFulfillment
         self.options = options
         self.pageAttributes = pageAttributes
         self.recsProductData = recsProductData
         self.listedItems = listedItems
         self.addDeviceDateTime = addDeviceDateTime
+        self.cuid = cuid
+        self.cuidType = cuidType
         logger = DYLogger(logCategory: logCategory)
 
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
@@ -88,9 +97,10 @@ public class ChooseModel: EndpointModelProtocol {
         let context = Context(
             page: page,
             device: device,
-            branch: (dayPart != nil || branchId != nil) ? Branch(
+            branch: (dayPart != nil || branchId != nil || orderFulfillment != nil) ? Branch(
                 id: branchId,
-                dayPart: dayPart
+                dayPart: dayPart,
+                orderFulfillment: orderFulfillment
             ) : nil,
             channel: endpointModelProvider.getExperienceConfig().channel,
             cart: cart,
@@ -121,7 +131,7 @@ public class ChooseModel: EndpointModelProtocol {
 
         let choosePayloadData = ChoosePayload(
             session: endpointModelProvider.getSession(),
-            user: endpointModelProvider.getUser(),
+            user: endpointModelProvider.getUser(cuid: cuid, cuidType: cuidType),
             selector: selector,
             context: context,
             options: options

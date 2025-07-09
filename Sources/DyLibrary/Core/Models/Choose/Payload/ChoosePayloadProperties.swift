@@ -40,6 +40,7 @@ public struct RecsProductDataOptions: Codable {
 public struct Branch: Codable {
     public var id: String?
     public var dayPart: DayPart?
+    public var orderFulfillment: OrderFulfillment?
 }
 
 public struct CartItem: Encodable {

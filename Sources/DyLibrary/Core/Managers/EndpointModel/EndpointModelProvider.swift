@@ -13,7 +13,7 @@ import Foundation
 
 public protocol EndpointModelProvider {
     func getSession() -> Session
-    func getUser() -> User
+    func getUser(cuid: String?, cuidType: String?) -> User
     func getExperienceConfig() -> ExperienceConfig
     func decodingWarnings(body: Data?) throws -> [Warning]?
     func encodingPayload(payload: EndpointPayload) throws -> Data?

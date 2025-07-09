@@ -11,4 +11,5 @@ public enum DecisionType: String, Codable {
     case customJSON = "CUSTOM_JSON"
     case recs = "RECS"
     case storeRecs = "STORE_RECS"
+    case sorting = "SORT"
 }

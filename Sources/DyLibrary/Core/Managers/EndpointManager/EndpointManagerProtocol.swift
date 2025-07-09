@@ -26,8 +26,8 @@ extension EndpointManagerProtocol {
             getSession: {
                 endpointManagerProvider.getSession()
             },
-            getUser: {
-                endpointManagerProvider.getUser()
+            getUser: { cuid, cuidType in
+                endpointManagerProvider.getUser(cuid: cuid, cuidType: cuidType)
             },
             getExperienceConfig: {
                 endpointManagerProvider.getExperienceConfig()

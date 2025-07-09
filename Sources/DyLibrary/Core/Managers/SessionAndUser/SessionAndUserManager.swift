@@ -26,10 +26,10 @@ class SessionAndUserManager {
 
     // MARK: SessionAndUserManager
 
-    func getUser() -> User {
+    func getUser(cuid: String? = nil, cuidType: String? = nil) -> User {
         let dyid = storageManager.getUserId()
         logger.log("\(#function) -> \(dyid)")
-        return User(dyid: dyid, sharedDevice: sharedDevice)
+        return User(dyid: dyid, sharedDevice: sharedDevice, cuid: cuid, cuidType: cuidType)
     }
 
     func getSession() -> Session {

@@ -77,6 +77,25 @@ public class StoreRecsPayload: Payload {
     }
 }
 
+public class SortingPayload: Payload {
+    public let data: SortingData
+
+    public required init(from decoder: Decoder) throws {
+        // Decode the properties from the superclass first
+
+        // Decode the additional property `data`
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.data = try container.decode(SortingData.self, forKey: .data)
+        try super.init(from: decoder)
+
+    }
+
+    // Define the coding keys used for decoding
+    enum CodingKeys: String, CodingKey {
+        case data
+    }
+}
+
 public class RecsData: Decodable {
     public let custom: String
     public let slots: [RecsSlot]
@@ -125,6 +144,20 @@ public class StoreRecsData: Decodable {
         }
         self.slots = try container.decode([StoreRecsSlot].self, forKey: .slots)
 
+    }
+
+}
+
+public class SortingData: Decodable {
+    public let slots: [SortingRecsSlot]
+
+    private enum CodingKeys: CodingKey {
+        case slots
+    }
+
+    public required init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.slots = try container.decode([SortingRecsSlot].self, forKey: .slots)
     }
 
 }
