@@ -18,6 +18,41 @@ public protocol PredefinedProperties: EventProperties {
 /// Protocol for custom events
 public protocol CustomProperties: EventProperties { }
 
+struct DynamicCustomProperties: CustomProperties {
+    var map: [String: SupportedValue]
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DynamicCodingKey.self)
+
+        for (key, value) in map {
+            guard let codingKey = DynamicCodingKey(stringValue: key) else {
+                throw EncodingError.invalidValue(key, EncodingError.Context(
+                    codingPath: container.codingPath,
+                    debugDescription: "Invalid key: \(key)"
+                ))
+            }
+            try container.encode(value, forKey: codingKey)
+        }
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case properties
+    }
+}
+
+struct DynamicCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int? { nil }
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+
+    init?(intValue: Int) {
+        return nil
+    }
+}
+
 public struct AnyDYEvent: Encodable {
     let event: DYEvent?
 
@@ -46,18 +81,4 @@ public class DYEvent: Encodable {
         case name
         case properties
     }
-}
-
-// MARK: - Custom Event
-
-/// There is an example of custom event
-
-struct DYCustomEvent: CustomProperties {
-    var isVIP: Bool
-}
-
-struct DYCustomEventNew: CustomProperties {
-    var customerRole: String
-    var experienceRating: Int
-    var likesSpecialOffers: Bool
 }

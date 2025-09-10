@@ -13,4 +13,5 @@ public struct RawNetworkData {
     public let code: Int
     public let isSuccessful: Bool
     public let body: Data
+    public let sdkVersionHeader: String?
 }

@@ -23,6 +23,13 @@ public class Variation: Decodable, CustomStringConvertible {
         case type
     }
 
+    init (id: Int, payload: Payload, analyticsMetadata: AnalyticsMetadata? = nil, decisionId: String = "") {
+        self.id = id
+        self.payload = payload
+        self.analyticsMetadata = analyticsMetadata
+        self.decisionId = decisionId
+    }
+
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
@@ -72,7 +79,12 @@ public class StoreRecsVariation: Variation {
     private enum CodingKeys: CodingKey {
         case title
         case name
+    }
 
+    init(id: Int, payload: Payload, analyticsMetadata: AnalyticsMetadata? = nil, decisionId: String = "", title: String?, name: String?) {
+        self.title = title
+        self.name = name
+        super.init(id: id, payload: payload, analyticsMetadata: analyticsMetadata, decisionId: decisionId)
     }
 
     public required init(from decoder: Decoder) throws {

@@ -45,8 +45,8 @@ class ConfigManager {
         experienceConfig.deviceType = value
     }
 
-    internal func setDeviceId(_ value: String) {
-        logger.log("Changing deviceId to: \(value)")
+    internal func setDeviceId(_ value: String?) {
+        logger.log("Changing deviceId to: \(String(describing: value))")
         experienceConfig.deviceId = value
     }
 
@@ -55,23 +55,23 @@ class ConfigManager {
         experienceConfig.channel = value
     }
 
-    internal func setIp(_ value: String) {
-        logger.log("Changing ip to: \(value)")
+    internal func setIp(_ value: String?) {
+        logger.log("Changing ip to: \(String(describing: value))")
         experienceConfig.ip = value
     }
 
-    internal func setLocale(_ value: String) {
-        logger.log("Changing defaultLocale to: \(value)")
+    internal func setLocale(_ value: String?) {
+        logger.log("Changing defaultLocale to: \(String(describing: value))")
         experienceConfig.defaultLocale = value
     }
 
-    internal func setIsImplicitPageview(_ value: Bool) {
-        logger.log("Changing isImplicitPageview to: \(value)")
+    internal func setIsImplicitPageview(_ value: Bool?) {
+        logger.log("Changing isImplicitPageview to: \(String(describing: value))")
         experienceConfig.isImplicitPageview = value
     }
 
-    internal func setIsImplicitImpressionMode(_ value: Bool) {
-        logger.log("Changing isImplicitImpressionMode to: \(value)")
+    internal func setIsImplicitImpressionMode(_ value: Bool?) {
+        logger.log("Changing isImplicitImpressionMode to: \(String(describing: value))")
         experienceConfig.isImplicitImpressionMode = value
     }
 

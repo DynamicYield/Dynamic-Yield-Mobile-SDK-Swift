@@ -38,7 +38,7 @@ extension Slot {
 
 extension StoreRecsVariation {
     public func reportSlotsImpression(branchId: String? = nil, dayPart: DayPart? = nil, slotsIds: [String]) async -> DYResult {
-        await DYSdk.shared().engagements.reportSlotImpression(
+        await DYSdk.shared().engagements.reportSlotsImpression(
             variation: id,
             slotsIds: slotsIds,
             branchId: branchId,

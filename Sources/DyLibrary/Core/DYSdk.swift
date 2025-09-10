@@ -79,7 +79,7 @@ public class DYSdk {
 
         self.version = version
 
-        networkManager = NetworkManager(apiKey: apiKey, dyVersion: version)
+        networkManager = NetworkManager(apiKey: apiKey, dyVersion: version.description)
 
         let sharedDevice = configManager.getExperienceConfig().sharedDevice
         sessionAndUserManager = SessionAndUserManager(sharedDevice: sharedDevice)
@@ -107,11 +107,11 @@ public class DYSdk {
                                     isImplicitImpressionMode: Bool? = nil,
                                     version: DyVersion,
                                     networkRequestProvider: any NetworkRequestProvider = HttpNetworkRequestProvider(),
-                                    customUrl: String? = nil) {
+                                    customUrl: String? = nil) -> Bool {
         initQueue.sync {
             guard instance == nil && initialized == false else {
                 print("Singleton already initialized")
-                return
+                return false
             }
 
             instance = DYSdk(apiKey: apiKey,
@@ -124,10 +124,12 @@ public class DYSdk {
                              locale: locale,
                              isImplicitPageview: isImplicitPageview,
                              isImplicitImpressionMode: isImplicitImpressionMode,
-                             version: DyVersion(Version.major, Version.minor, Version.patch),
+                             version: version,
                              networkRequestProvider: networkRequestProvider,
                              customUrl: customUrl,
                              initialized: true)
+
+            return true
         }
     }
 
@@ -142,7 +144,7 @@ public class DYSdk {
                                   locale: String? = nil,
                                   isImplicitPageview: Bool? = nil,
                                   isImplicitImpressionMode: Bool? = nil,
-                                  customUrl: String? = nil) {
+                                  customUrl: String? = nil) -> Bool {
 
         initialize(apiKey: apiKey,
                    dataCenter: dataCenter,
@@ -249,7 +251,7 @@ public class DYSdk {
         configManager.setDeviceType(value)
     }
 
-    public func setDeviceId(_ value: String) {
+    public func setDeviceId(_ value: String?) {
         configManager.setDeviceId(value)
     }
 
@@ -257,19 +259,19 @@ public class DYSdk {
         configManager.setChannel(value)
     }
 
-    public func setIp(_ value: String) {
+    public func setIp(_ value: String?) {
         configManager.setIp(value)
     }
 
-    public func setLocale(_ value: String) {
+    public func setLocale(_ value: String?) {
         configManager.setLocale(value)
     }
 
-    public func setIsImplicitPageview(_ value: Bool) {
+    public func setIsImplicitPageview(_ value: Bool?) {
         configManager.setIsImplicitPageview(value)
     }
 
-    public func setIsImplicitImpressionMode(_ value: Bool) {
+    public func setIsImplicitImpressionMode(_ value: Bool?) {
         configManager.setIsImplicitImpressionMode(value)
     }
 
@@ -294,5 +296,14 @@ public class DYSdk {
 #else
         return .release
 #endif
+    }
+
+    // swiftlint:disable:next identifier_name
+    public func _setHeaderInternalUse(dyVersion: String) {
+        if isInitialized() {
+            self.networkManager._setHeaderInternalUse(dyVersion: dyVersion)
+        } else {
+            logger.log(logLevel: .critical, InitializeError(isInitialize: false).message)
+        }
     }
 }
