@@ -9,12 +9,19 @@ import Foundation
 public class EncodingPayloadError: Error, CustomStringConvertible {
 
     public let sourceError: Error?
+    public let stringError: String?
 
     init(sourceError: Error?) {
         self.sourceError = sourceError
+        stringError = nil
+    }
+
+    init(source: String?) {
+        self.stringError = source
+        sourceError = nil
     }
 
     public var description: String {
-        sourceError?.localizedDescription ?? "DY SDK has occured error during body encoding"
+        sourceError?.localizedDescription ?? stringError ?? "DY SDK has occured error during body encoding"
     }
 }

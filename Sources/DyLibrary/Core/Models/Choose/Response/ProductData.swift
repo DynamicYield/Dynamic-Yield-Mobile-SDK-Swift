@@ -17,6 +17,10 @@ public class StoreRecsProductData: ProductData {
         case groupId = "group_id"
     }
 
+    init(groupId: String?) {
+        self.groupId = groupId
+    }
+
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         groupId = try container.decodeIfPresent(String.self, forKey: .groupId)
@@ -51,6 +55,19 @@ public class DefaultRecsProductData: RecsProductData {
         case keywords
     }
 
+    init(productType: ProductType? = nil, groupId: String?  = nil, name: String?  = nil, url: String?  = nil, price: Float?  = nil, inStock: Bool?  = nil, imageUrl: String? = nil, categories: [String?]?  = nil, keywords: [String?]? = nil, extra: [String: Any?] = [:]) {
+        self.productType = productType
+        self.groupId = groupId
+        self.name = name
+        self.url = url
+        self.price = price
+        self.inStock = inStock
+        self.imageUrl = imageUrl
+        self.categories = categories
+        self.keywords = keywords
+        self.extra = extra
+    }
+
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         productType = try container.decodeIfPresent(ProductType.self, forKey: .productType)
@@ -73,6 +90,8 @@ public class DefaultRecsProductData: RecsProductData {
                 extra[key.stringValue] = stringValue
             } else if let floatValue = try? rawContainer.decode(Float.self, forKey: key) {
                 extra[key.stringValue] = floatValue
+            } else if let boolValue = try? rawContainer.decode(Bool.self, forKey: key) {
+                extra[key.stringValue] = boolValue
             } else {
                 extra[key.stringValue] = nil
             }

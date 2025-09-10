@@ -11,14 +11,14 @@ public struct SubmissionEventProperties: EventProperties {
     public var dyType: String
     var value: Float
     var currency: CurrencyType?
-    var uniqueTransactionId: String
-    var cart: [CartItem]
+    var uniqueTransactionId: String?
+    var cart: [CartInnerItem]
 
     public init(
         value: Float,
         currency: CurrencyType? = nil,
-        uniqueTransactionId: String,
-        cart: [CartItem]
+        uniqueTransactionId: String? = nil,
+        cart: [CartInnerItem]
     ) {
         self.dyType = "purchase-v1"
         self.value = value

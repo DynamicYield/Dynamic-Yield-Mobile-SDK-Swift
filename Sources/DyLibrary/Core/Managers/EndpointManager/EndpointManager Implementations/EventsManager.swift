@@ -32,7 +32,6 @@ public class EventsManager: EndpointManagerProtocol {
 
     func getWarnings(body: Data?) throws -> [Warning]? {
         logger.log(#function)
-
         guard let data = body else {
             return nil
         }
@@ -48,11 +47,15 @@ public class EventsManager: EndpointManagerProtocol {
     // MARK: API
 
     public func reportEvents(events: DYEvent...) async -> DYResult {
+        return  await reportEvents(events: events)
+    }
+
+    public func reportEvents(events: [DYEvent]) async -> DYResult {
         logger.log(#function)
 
         if !endpointManagerProvider.isSdkInitialized() {
             logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
-            return DYChooseResult(choices: nil, status: ResultStatus.error, warning: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
+            return DYResult(status: ResultStatus.error, warnings: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
         }
 
         let endpoint = EventModel(endpointModelProvider: endpointModelProvider, events: events)
@@ -153,7 +156,7 @@ public class EventsManager: EndpointManagerProtocol {
         return await reportEvents(
             events: DYEvent(
                 eventName: eventName,
-                properties: PurchaseEventProperties(
+                properties: SubmissionEventProperties(
                     value: value,
                     currency: currency,
                     uniqueTransactionId: uniqueTransactionId,
@@ -435,4 +438,8 @@ public class EventsManager: EndpointManagerProtocol {
         return await reportEvents(events: DYEvent(eventName: eventName, properties: properties))
     }
 
+    public func reportCustomEvents(eventName: String, map: [String: SupportedValue]) async -> DYResult {
+        logger.log(#function)
+        return await reportEvents(events: DYEvent(eventName: eventName, properties: DynamicCustomProperties(map: map)))
+    }
 }

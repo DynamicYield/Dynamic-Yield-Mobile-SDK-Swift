@@ -61,7 +61,9 @@ class ChoosePayload: EndpointPayload {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(user, forKey: .user)
         try container.encode(session, forKey: .session)
-        try container.encode(selector, forKey: .selector)
+        if let selector = selector {
+            try container.encode(selector, forKey: .selector)
+        }
         try container.encode(context, forKey: .context)
         if let options = options {
             try container.encode(options, forKey: .options)
