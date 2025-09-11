@@ -52,7 +52,7 @@ public class PageViewManager: EndpointManagerProtocol {
 
         if !endpointManagerProvider.isSdkInitialized() {
             logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
-            return DYChooseResult(choices: nil, status: ResultStatus.error, warning: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
+            return DYResult(status: ResultStatus.error, warnings: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
         }
 
         let endpoint = PageViewModel(
@@ -151,6 +151,7 @@ public class PageViewManager: EndpointManagerProtocol {
             page: Page(
                 type: PageType.other,
                 location: pageLocation,
+                data: [data],
                 referrer: pageReferrer,
                 pageLocale: pageLocale
             )

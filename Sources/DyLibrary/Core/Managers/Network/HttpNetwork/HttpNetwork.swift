@@ -64,7 +64,7 @@ class HttpNetwork: NetworkRequest {
         let encodingBody = String(data: data, encoding: .utf8)
         logger.log("got response for url: \(url):\n code: \(httpResponse.statusCode),\n body: \(encodingBody ?? "nil")")
 
-        return RawNetworkData(request: request, urlResponse: response, code: httpResponse.statusCode, isSuccessful: 200...299 ~= httpResponse.statusCode, body: data)
+        return RawNetworkData(request: request, urlResponse: response, code: httpResponse.statusCode, isSuccessful: 200...299 ~= httpResponse.statusCode, body: data, sdkVersionHeader: headers[EndpointModelUtils.dySdkVersionHeader])
     }
 }
 

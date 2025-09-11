@@ -46,8 +46,8 @@ public class Page: Encodable {
         Page(type: .cart, location: pageLocation, data: cart, referrer: pageReferrer, pageLocale: pageLocale)
     }
 
-    public static func otherPage(pageLocation: String, pageReferrer: String? = nil, pageLocale: String? = nil) -> Page {
-        Page(type: .other, location: pageLocation, data: [], referrer: pageReferrer, pageLocale: pageLocale)
+    public static func otherPage(pageLocation: String, pageReferrer: String? = nil, pageLocale: String? = nil, data: String? = nil) -> Page {
+        Page(type: .other, location: pageLocation, data: data.map { [$0] } ?? [], referrer: pageReferrer, pageLocale: pageLocale)
     }
 
 }

@@ -9,12 +9,12 @@ import Foundation
 
 class NetworkManager {
     internal let apiKey: String
-    private let dyVersion: DyVersion
+    private var dyVersion: String
     internal var timeout: TimeInterval?
 
     private let logger = DYLogger(logCategory: "NetworkManager")
 
-    init(apiKey: String, dyVersion: DyVersion) {
+    init(apiKey: String, dyVersion: String) {
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
         self.apiKey = apiKey
         self.dyVersion = dyVersion
@@ -42,6 +42,11 @@ class NetworkManager {
         return [EndpointModelUtils.acceptHeader: EndpointModelUtils.applicationJson,
          EndpointModelUtils.contentTypeHeader: EndpointModelUtils.applicationJson,
          EndpointModelUtils.dyApiKey: apiKey,
-         EndpointModelUtils.dySdkVersionHeader: dyVersion.description]
+         EndpointModelUtils.dySdkVersionHeader: dyVersion]
+    }
+
+    // swiftlint:disable:next identifier_name
+    internal func _setHeaderInternalUse(dyVersion: String) {
+        self.dyVersion = dyVersion
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct ExperienceConfig {
-    let dataCenter: DataCenter
+    public let dataCenter: DataCenter
     public internal(set) var sharedDevice: Bool?
     public internal(set) var deviceType: DeviceType?
     public internal(set) var deviceId: String?

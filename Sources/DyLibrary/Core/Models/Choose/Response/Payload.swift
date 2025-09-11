@@ -9,10 +9,19 @@ import Foundation
 
 public class Payload: Decodable {
     public let type: DecisionType
+
+    init(type: DecisionType) {
+        self.type = type
+    }
 }
 
 public class CustomJsonPayload: Payload {
     public var data: String
+
+    public required init(type: DecisionType, data: String) {
+        self.data = data
+        super.init(type: type)
+    }
 
     // Custom initializer for CustomPayload
     public required init(from decoder: Decoder) throws {
@@ -41,6 +50,11 @@ public class CustomJsonPayload: Payload {
 
 public class RecsPayload: Payload {
     public var data: RecsData
+
+    init(type: DecisionType, data: RecsData) {
+        self.data = data
+        super.init(type: type)
+    }
 
     public required init(from decoder: Decoder) throws {
 
@@ -71,6 +85,11 @@ public class StoreRecsPayload: Payload {
 
     }
 
+    init(type: DecisionType, data: StoreRecsData) {
+        self.data = data
+        super.init(type: type)
+    }
+
     // Define the coding keys used for decoding
     enum CodingKeys: String, CodingKey {
         case data
@@ -90,6 +109,11 @@ public class SortingPayload: Payload {
 
     }
 
+    init(type: DecisionType, data: SortingData) {
+        self.data = data
+        super.init(type: type)
+    }
+
     // Define the coding keys used for decoding
     enum CodingKeys: String, CodingKey {
         case data
@@ -103,6 +127,11 @@ public class RecsData: Decodable {
     private enum CodingKeys: CodingKey {
         case custom
         case slots
+    }
+
+    init(custom: String, slots: [RecsSlot]) {
+        self.custom = custom
+        self.slots = slots
     }
 
     public required init(from decoder: any Decoder) throws {
@@ -129,6 +158,11 @@ public class StoreRecsData: Decodable {
     private enum CodingKeys: CodingKey {
         case custom
         case slots
+    }
+
+    init(custom: String, slots: [StoreRecsSlot]) {
+        self.custom = custom
+        self.slots = slots
     }
 
     public required init(from decoder: any Decoder) throws {
@@ -158,6 +192,10 @@ public class SortingData: Decodable {
     public required init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.slots = try container.decode([SortingRecsSlot].self, forKey: .slots)
+    }
+
+    init(slots: [SortingRecsSlot]) {
+        self.slots = slots
     }
 
 }

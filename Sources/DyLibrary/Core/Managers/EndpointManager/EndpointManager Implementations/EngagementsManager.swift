@@ -48,7 +48,7 @@ public class EngagementsManager: EndpointManagerProtocol {
 
     // MARK: API
 
-    public func reportEngagement(
+    internal func reportEngagement(
         engagements: BaseEngagement...,
         branchId: String? = nil,
         dayPart: DayPart? = nil
@@ -57,7 +57,7 @@ public class EngagementsManager: EndpointManagerProtocol {
 
         if !endpointManagerProvider.isSdkInitialized() {
             logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
-            return DYChooseResult(choices: nil, status: ResultStatus.error, warning: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
+            return DYResult(status: ResultStatus.error, warnings: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
         }
 
         let endpoint = EngagementModel(
@@ -93,6 +93,7 @@ public class EngagementsManager: EndpointManagerProtocol {
         logger.log(#function)
         return await reportEngagement(
             engagements: ImpressionEngagement(decisionId: decisionId, variations: variations),
+            branchId: branchId,
             dayPart: dayPart
         )
     }
@@ -109,10 +110,13 @@ public class EngagementsManager: EndpointManagerProtocol {
             engagements: SlotClickEngagement(
                 variations: (variation != nil) ? [variation!] : nil,
                 slotId: slotId
-            ), branchId: branchId, dayPart: dayPart
+            ),
+            branchId: branchId,
+            dayPart: dayPart
         )
     }
 
+    @available(*, deprecated, message: "Use reportSlotsImpression() instead.")
     public func reportSlotImpression(
         variation: Int? = nil,
         slotsIds: [String],
@@ -125,7 +129,25 @@ public class EngagementsManager: EndpointManagerProtocol {
             engagements: SlotImpressionEngagement(
                 variations: (variation != nil) ? [variation!] : nil,
                 slotsIds: slotsIds
-            ), dayPart: dayPart
+            ),
+            branchId: branchId, dayPart: dayPart
+        )
+    }
+
+    public func reportSlotsImpression(
+        variation: Int? = nil,
+        slotsIds: [String],
+        branchId: String? = nil,
+        dayPart: DayPart? = nil
+    ) async -> DYResult {
+        logger.log(#function)
+
+        return await reportEngagement(
+            engagements: SlotImpressionEngagement(
+                variations: (variation != nil) ? [variation!] : nil,
+                slotsIds: slotsIds
+            ),
+            branchId: branchId, dayPart: dayPart
         )
     }
 
