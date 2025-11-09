@@ -46,11 +46,11 @@ public class EventsManager: EndpointManagerProtocol {
 
     // MARK: API
 
-    public func reportEvents(events: DYEvent...) async -> DYResult {
-        return  await reportEvents(events: events)
+    public func reportEvents(events: DYEvent..., branchId: String? = nil, dayPart: DayPart? = nil, orderFulfillment: OrderFulfillment? = nil) async -> DYResult {
+        return await reportEvents(events: events, branchId: branchId, dayPart: dayPart, orderFulfillment: orderFulfillment)
     }
 
-    public func reportEvents(events: [DYEvent]) async -> DYResult {
+    public func reportEvents(events: [DYEvent], branchId: String? = nil, dayPart: DayPart? = nil, orderFulfillment: OrderFulfillment? = nil) async -> DYResult {
         logger.log(#function)
 
         if !endpointManagerProvider.isSdkInitialized() {
@@ -58,8 +58,8 @@ public class EventsManager: EndpointManagerProtocol {
             return DYResult(status: ResultStatus.error, warnings: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
         }
 
-        let endpoint = EventModel(endpointModelProvider: endpointModelProvider, events: events)
-        return  await sendRequest(endpoint: endpoint)
+        let endpoint = EventModel(endpointModelProvider: endpointModelProvider, events: events, branchId: branchId, dayPart: dayPart, orderFulfillment: orderFulfillment)
+        return await sendRequest(endpoint: endpoint)
     }
 
     public func reportPromoCodeEnterEvent(
@@ -129,7 +129,10 @@ public class EventsManager: EndpointManagerProtocol {
         value: Float,
         currency: CurrencyType? = nil,
         uniqueTransactionId: String? = nil,
-        cart: [CartInnerItem]
+        cart: [CartInnerItem],
+        branchId: String? = nil,
+        dayPart: DayPart? = nil,
+        orderFulfillment: OrderFulfillment? = nil
     ) async -> DYResult {
         logger.log(#function)
         return await reportEvents(
@@ -141,7 +144,10 @@ public class EventsManager: EndpointManagerProtocol {
                     uniqueTransactionId: uniqueTransactionId,
                     cart: cart
                 )
-            )
+            ),
+            branchId: branchId,
+            dayPart: dayPart,
+            orderFulfillment: orderFulfillment
         )
     }
 
@@ -227,7 +233,10 @@ public class EventsManager: EndpointManagerProtocol {
         eventName: String,
         cuidType: String? = nil,
         cuid: String? = nil,
-        secondaryIdentifiers: [SecondaryIdentifier]? = nil
+        secondaryIdentifiers: [SecondaryIdentifier]? = nil,
+        branchId: String? = nil,
+        dayPart: DayPart? = nil,
+        orderFulfillment: OrderFulfillment? = nil
     ) async -> DYResult {
         logger.log(#function)
         return await reportEvents(
@@ -238,7 +247,10 @@ public class EventsManager: EndpointManagerProtocol {
                     cuid: cuid,
                     secondaryIdentifiers: secondaryIdentifiers
                 )
-            )
+            ),
+            branchId: branchId,
+            dayPart: dayPart,
+            orderFulfillment: orderFulfillment
         )
     }
 
