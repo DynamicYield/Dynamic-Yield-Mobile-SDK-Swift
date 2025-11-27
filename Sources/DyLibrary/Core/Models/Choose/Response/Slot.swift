@@ -51,22 +51,22 @@ public class RecsSlot: Slot {
     }
 }
 
-public class StoreRecsSlot: Slot {
+public class QsrProductRecsSlot: Slot {
 
-    public var productData: StoreRecsProductData
+    public var productData: QsrProductRecsProductData
 
     private enum CodingKeys: CodingKey {
         case productData
     }
 
-    init(sku: String, slotId: String, variationId: Int? = nil, productData: StoreRecsProductData) {
+    init(sku: String, slotId: String, variationId: Int? = nil, productData: QsrProductRecsProductData) {
         self.productData = productData
         super.init(sku: sku, slotId: slotId, variationId: variationId)
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.productData = try container.decode(StoreRecsProductData.self, forKey: .productData)
+        self.productData = try container.decode(QsrProductRecsProductData.self, forKey: .productData)
         try super.init(from: decoder)
     }
 }

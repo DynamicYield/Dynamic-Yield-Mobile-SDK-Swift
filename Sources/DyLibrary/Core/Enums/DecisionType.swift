@@ -10,7 +10,7 @@ import Foundation
 public enum DecisionType: String, Codable {
     case customJSON = "CUSTOM_JSON"
     case recs = "RECS"
-    case storeRecs = "STORE_RECS"
+    case qsrProductRecs = "QSR_PRODUCT_RECS"
     case sorting = "SORT"
 
     public init(from decoder: Decoder) throws {
@@ -22,8 +22,8 @@ public enum DecisionType: String, Codable {
             self = .customJSON
         case "RECS", "RECS_DECISION":
             self = .recs
-        case "STORE_RECS":
-            self = .storeRecs
+        case "QSR_PRODUCT_RECS":
+            self = .qsrProductRecs
         case "SORT":
             self = .sorting
         default:

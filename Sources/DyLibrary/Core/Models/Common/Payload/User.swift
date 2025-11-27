@@ -12,23 +12,28 @@ public struct User: Encodable {
     let sharedDevice: Bool?
     let cuid: String?
     let cuidType: String?
+    // activeConsent is part of User, and will be serialized as true when sharedDevice is false
 
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case dyid
         case sharedDevice
         case cuid
         case cuidType
+        case activeConsent = "active_consent_accepted"
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        if sharedDevice != true {
-            let dyidValue = (dyid?.isEmpty ?? true) ? "" : dyid
-            try container.encodeIfPresent(dyidValue, forKey: .dyid)
-        } else {
-            try container.encodeIfPresent(self.sharedDevice, forKey: .sharedDevice)
+        if sharedDevice == true {
+            try container.encodeIfPresent(true, forKey: .sharedDevice)
             try container.encodeIfPresent(self.cuid, forKey: .cuid)
             try container.encodeIfPresent(self.cuidType, forKey: .cuidType)
+        } else {
+            try container.encodeIfPresent(true, forKey: .activeConsent)
+            try container.encodeIfPresent((dyid?.isEmpty ?? true) ? "" : dyid, forKey: .dyid)
+            if sharedDevice != nil {
+                try container.encode(false, forKey: .sharedDevice)
+            }
         }
     }
 

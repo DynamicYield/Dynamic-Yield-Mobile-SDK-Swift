@@ -51,23 +51,23 @@ public class Choice: Decodable, CustomStringConvertible {
                 variation = try variationsContainer.decode(CustomVariation.self)
             case .recsDecision:
                 variation = try variationsContainer.decode(RecsVariation.self)
-                if let storeRecsPayload = variation?.payload as? RecsPayload {
-                    storeRecsPayload.data.slots.forEach { slot in
-                        slot.variationId = self.id
+                if let qsrProductRecsPayload = variation?.payload as? RecsPayload {
+                    qsrProductRecsPayload.data.slots.forEach { slot in
+                        slot.variationId = variation?.id
                     }
                 }
-            case .storeRecsDecision:
-                variation = try variationsContainer.decode(StoreRecsVariation.self)
-                if let storeRecsPayload = variation?.payload as? StoreRecsPayload {
-                    storeRecsPayload.data.slots.forEach { slot in
-                        slot.variationId = self.id
+            case .qsrProductRecsDecision:
+                variation = try variationsContainer.decode(QsrProductRecsVariation.self)
+                if let qsrProductRecsPayload = variation?.payload as? QsrProductRecsPayload {
+                    qsrProductRecsPayload.data.slots.forEach { slot in
+                        slot.variationId = variation?.id
                     }
                 }
             case .sortingDecision:
                 variation = try variationsContainer.decode(SortingVariation.self)
                 if let sortingPayload = variation?.payload as? SortingPayload {
                     sortingPayload.data.slots.forEach { slot in
-                        slot.variationId = self.id
+                        slot.variationId = variation?.id
                     }
                 }
             }

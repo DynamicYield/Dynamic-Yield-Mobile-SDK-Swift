@@ -46,8 +46,8 @@ public class Variation: Decodable, CustomStringConvertible {
             self.payload = try container.decode(CustomJsonPayload.self, forKey: .payload)
         case .recs:
             self.payload = try container.decode(RecsPayload.self, forKey: .payload)
-        case .storeRecs:
-            self.payload = try container.decode(StoreRecsPayload.self, forKey: .payload)
+        case .qsrProductRecs:
+            self.payload = try container.decode(QsrProductRecsPayload.self, forKey: .payload)
         case .sorting:
             self.payload = try container.decode(SortingPayload.self, forKey: .payload)
         }
@@ -71,9 +71,8 @@ public class RecsVariation: Variation {
 
 }
 
-public class StoreRecsVariation: Variation {
+public class QsrProductRecsVariation: Variation {
 
-    public let title: String?
     public let name: String?
 
     private enum CodingKeys: CodingKey {
@@ -81,8 +80,7 @@ public class StoreRecsVariation: Variation {
         case name
     }
 
-    init(id: Int, payload: Payload, analyticsMetadata: AnalyticsMetadata? = nil, decisionId: String = "", title: String?, name: String?) {
-        self.title = title
+    init(id: Int, payload: Payload, analyticsMetadata: AnalyticsMetadata? = nil, decisionId: String = "", name: String?) {
         self.name = name
         super.init(id: id, payload: payload, analyticsMetadata: analyticsMetadata, decisionId: decisionId)
     }
@@ -90,7 +88,6 @@ public class StoreRecsVariation: Variation {
     public required init(from decoder: Decoder) throws {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.title = try container.decodeIfPresent(String.self, forKey: .title)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
 
         try super.init(from: decoder)
