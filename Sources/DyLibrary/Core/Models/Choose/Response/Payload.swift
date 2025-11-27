@@ -72,20 +72,20 @@ public class RecsPayload: Payload {
     }
 }
 
-public class StoreRecsPayload: Payload {
-    public let data: StoreRecsData
+public class QsrProductRecsPayload: Payload {
+    public let data: QsrProductRecsData
 
     public required init(from decoder: Decoder) throws {
         // Decode the properties from the superclass first
 
         // Decode the additional property `data`
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.data = try container.decode(StoreRecsData.self, forKey: .data)
+        self.data = try container.decode(QsrProductRecsData.self, forKey: .data)
         try super.init(from: decoder)
 
     }
 
-    init(type: DecisionType, data: StoreRecsData) {
+    init(type: DecisionType, data: QsrProductRecsData) {
         self.data = data
         super.init(type: type)
     }
@@ -151,16 +151,16 @@ public class RecsData: Decodable {
 
 }
 
-public class StoreRecsData: Decodable {
+public class QsrProductRecsData: Decodable {
     public let custom: String
-    public let slots: [StoreRecsSlot]
+    public let slots: [QsrProductRecsSlot]
 
     private enum CodingKeys: CodingKey {
         case custom
         case slots
     }
 
-    init(custom: String, slots: [StoreRecsSlot]) {
+    init(custom: String, slots: [QsrProductRecsSlot]) {
         self.custom = custom
         self.slots = slots
     }
@@ -176,7 +176,7 @@ public class StoreRecsData: Decodable {
         } else {
             self.custom = "{}" // Default empty JSON
         }
-        self.slots = try container.decode([StoreRecsSlot].self, forKey: .slots)
+        self.slots = try container.decode([QsrProductRecsSlot].self, forKey: .slots)
 
     }
 

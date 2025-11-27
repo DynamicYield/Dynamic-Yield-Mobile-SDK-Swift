@@ -11,7 +11,7 @@ public enum ChoiceType: String, Decodable {
     case decision = "DECISION"
     case recsDecision = "RECS_DECISION"
     case noDecision = "NO_DECISION"
-    case storeRecsDecision = "STORE_RECS_DECISION"
+    case qsrProductRecsDecision = "QSR_PRODUCT_RECS_DECISION"
     case sortingDecision = "SORTING_DECISION"
 
     // Custom initializer for decoding

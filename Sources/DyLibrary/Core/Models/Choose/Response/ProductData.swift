@@ -10,7 +10,7 @@ public protocol ProductData: Decodable { }
 
 public protocol RecsProductData: ProductData { }
 
-public class StoreRecsProductData: ProductData {
+public class QsrProductRecsProductData: ProductData {
     let groupId: String?
 
     enum CodingKeys: String, CodingKey {
