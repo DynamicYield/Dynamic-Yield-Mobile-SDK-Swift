@@ -19,9 +19,12 @@ class PageViewModel: EndpointModelProtocol {
     var endpointModelProvider: EndpointModelProvider
     var logCategory = "Pageview Endpoint"
 
-    init(endpointModelProvider: EndpointModelProvider, page: Page) {
+    private let addDeviceDateTime: Bool
+
+    init(endpointModelProvider: EndpointModelProvider, page: Page, addDeviceDateTime: Bool = true) {
         self.endpointModelProvider = endpointModelProvider
         self.page = page
+        self.addDeviceDateTime = addDeviceDateTime
 
         logger = DYLogger(logCategory: logCategory)
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
@@ -36,12 +39,12 @@ class PageViewModel: EndpointModelProtocol {
     }
 
     func getPayload() throws -> Data? {
-
         let device = Device(
             type: endpointModelProvider.getExperienceConfig().deviceType,
             ip: endpointModelProvider.getExperienceConfig().ip,
             id: endpointModelProvider.getExperienceConfig().deviceId,
-            addDateTime: false)
+            addDateTime: addDeviceDateTime
+        )
 
         if page.locale == nil {
             page.locale = endpointModelProvider.getExperienceConfig().defaultLocale

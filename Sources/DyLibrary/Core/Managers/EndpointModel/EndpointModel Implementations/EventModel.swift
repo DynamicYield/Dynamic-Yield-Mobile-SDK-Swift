@@ -16,18 +16,20 @@ class EventModel: EndpointModelProtocol {
     private let branchId: String?
     private let dayPart: DayPart?
     private let orderFulfillment: OrderFulfillment?
+    private let addDeviceDateTime: Bool
 
     var httpMethod = HttpMethod.post
     var urlMethod = EndpointModelUtils.eventUrl
     var endpointModelProvider: EndpointModelProvider
     var logCategory = "Event Endpoint"
 
-    init(endpointModelProvider: EndpointModelProvider, events: [DYEvent], branchId: String? = nil, dayPart: DayPart? = nil, orderFulfillment: OrderFulfillment? = nil) {
+    init(endpointModelProvider: EndpointModelProvider, events: [DYEvent], branchId: String? = nil, dayPart: DayPart? = nil, orderFulfillment: OrderFulfillment? = nil, addDeviceDateTime: Bool = true) {
         self.endpointModelProvider = endpointModelProvider
         self.events = events
         self.branchId = branchId
         self.dayPart = dayPart
         self.orderFulfillment = orderFulfillment
+        self.addDeviceDateTime = addDeviceDateTime
 
         logger = DYLogger(logCategory: logCategory)
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
@@ -42,10 +44,11 @@ class EventModel: EndpointModelProtocol {
     }
 
     func getPayload() throws -> Data? {
-
         let device = Device(
+            type: endpointModelProvider.getExperienceConfig().deviceType,
             ip: endpointModelProvider.getExperienceConfig().ip,
-            addDateTime: false
+            id: endpointModelProvider.getExperienceConfig().deviceId,
+            addDateTime: addDeviceDateTime
         )
         let branch = (branchId != nil || dayPart != nil || orderFulfillment != nil) ?
             Branch(id: branchId, dayPart: dayPart, orderFulfillment: orderFulfillment) : nil
