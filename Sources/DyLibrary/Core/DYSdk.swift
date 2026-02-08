@@ -37,6 +37,8 @@ public class DYSdk {
     public let engagements: EngagementsManager
     public let pageViews: PageViewManager
     public let choose: ChooseManager
+    public let search: SearchManager
+    public let assistant: AssistantManager
     internal let version: DyVersion
 
     private static let initQueue = DispatchQueue(label: "com.dy.initQueue")
@@ -79,17 +81,19 @@ public class DYSdk {
 
         self.version = version
 
-        networkManager = NetworkManager(apiKey: apiKey, dyVersion: version.description)
+        networkManager = NetworkManager(apiKey: apiKey, dyVersion: version.description, initialized: initialized)
 
         let sharedDevice = configManager.getExperienceConfig().sharedDevice
         sessionAndUserManager = SessionAndUserManager(sharedDevice: sharedDevice)
 
-        endpointManagerProvider = EndpointManagerProviderImplementation(configManager: configManager, networkManager: networkManager, sessionAndUserManager: sessionAndUserManager, networkRequestProvider: networkRequestProvider, initialized: initialized)
+        endpointManagerProvider = EndpointManagerProviderImplementation(configManager: configManager, networkManager: networkManager, sessionAndUserManager: sessionAndUserManager, networkRequestProvider: networkRequestProvider)
 
         choose = ChooseManager(endpointManagerProvider: endpointManagerProvider)
         engagements = EngagementsManager(endpointManagerProvider: endpointManagerProvider)
         events = EventsManager(endpointManagerProvider: endpointManagerProvider)
         pageViews = PageViewManager(endpointManagerProvider: endpointManagerProvider)
+        assistant = AssistantManager(endpointManagerProvider: endpointManagerProvider)
+        search = SearchManager(endpointManagerProvider: endpointManagerProvider)
 
         DYSdk.initialized = initialized
         logger.log(LoggingUtils.initLogMessage(type(of: self)))

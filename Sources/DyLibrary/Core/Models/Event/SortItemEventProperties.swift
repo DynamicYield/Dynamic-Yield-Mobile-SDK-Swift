@@ -17,4 +17,19 @@ public struct SortItemEventProperties: EventProperties {
         self.sortBy = sortBy
         self.sortOrder = sortOrder
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case dyType
+        case sortBy
+        case sortOrder
+    }
+}
+
+extension SortItemEventProperties: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(dyType, forKey: .dyType)
+        try container.encode(sortBy, forKey: .sortBy)
+        try container.encode(String(describing: sortOrder).uppercased(), forKey: .sortOrder)
+    }
 }

@@ -7,195 +7,153 @@
 
 import Foundation
 
-public class Payload: Decodable {
-    public let type: DecisionType
-
-    init(type: DecisionType) {
-        self.type = type
-    }
+public protocol Payload: Decodable {
+    var type: DecisionType { get }
 }
 
 public class CustomJsonPayload: Payload {
+    public let type: DecisionType
     public var data: String
 
-    public required init(type: DecisionType, data: String) {
+    public init(type: DecisionType, data: String) {
+        self.type = type
         self.data = data
-        super.init(type: type)
     }
 
-    // Custom initializer for CustomPayload
     public required init(from decoder: Decoder) throws {
-
-        // Decode the additional property `data`
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        if let jsonDict = try? container.decodeIfPresent([String: AnyDecodable].self, forKey: .data) {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonDict.mapValues { $0.value })
-            self.data = String(data: jsonData, encoding: .utf8) ?? "{}"
-        } else if let jsonArray = try? container.decode([AnyDecodable].self, forKey: .data) {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray.map { $0.value })
-            self.data = String(data: jsonData, encoding: .utf8) ?? "[]"
-        } else {
-            self.data = "{}" // Default empty JSON
-        }
-
-        try super.init(from: decoder)
+        self.data = try container.decodeCustomJSONAsString(forKey: .data) ?? ""
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
-    // Enum to define the additional keys for CustomPayload
     enum CodingKeys: String, CodingKey {
         case data
+        case type
     }
 }
 
 public class RecsPayload: Payload {
+    public let type: DecisionType
     public var data: RecsData
 
-    init(type: DecisionType, data: RecsData) {
+    public init(type: DecisionType, data: RecsData) {
+        self.type = type
         self.data = data
-        super.init(type: type)
     }
 
     public required init(from decoder: Decoder) throws {
-
-        // Decode the additional property `data`
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.data = try container.decode(RecsData.self, forKey: .data)
-
-        // Decode the properties from the superclass first
-        try super.init(from: decoder)
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
-    // Define the coding keys used for decoding
     enum CodingKeys: String, CodingKey {
         case data
+        case type
     }
 }
 
 public class QsrProductRecsPayload: Payload {
+    public let type: DecisionType
     public let data: QsrProductRecsData
 
-    public required init(from decoder: Decoder) throws {
-        // Decode the properties from the superclass first
+    public init(type: DecisionType, data: QsrProductRecsData) {
+        self.type = type
+        self.data = data
+    }
 
-        // Decode the additional property `data`
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.data = try container.decode(QsrProductRecsData.self, forKey: .data)
-        try super.init(from: decoder)
-
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
-    init(type: DecisionType, data: QsrProductRecsData) {
-        self.data = data
-        super.init(type: type)
-    }
-
-    // Define the coding keys used for decoding
     enum CodingKeys: String, CodingKey {
         case data
+        case type
     }
 }
 
 public class SortingPayload: Payload {
+    public let type: DecisionType
     public let data: SortingData
 
-    public required init(from decoder: Decoder) throws {
-        // Decode the properties from the superclass first
+    public init(type: DecisionType, data: SortingData) {
+        self.type = type
+        self.data = data
+    }
 
-        // Decode the additional property `data`
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.data = try container.decode(SortingData.self, forKey: .data)
-        try super.init(from: decoder)
-
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
-    init(type: DecisionType, data: SortingData) {
-        self.data = data
-        super.init(type: type)
-    }
-
-    // Define the coding keys used for decoding
     enum CodingKeys: String, CodingKey {
         case data
+        case type
     }
 }
 
-public class RecsData: Decodable {
-    public let custom: String
-    public let slots: [RecsSlot]
+public class VisualSearchPayload: Payload {
+    public let type: DecisionType
+    public let data: VisualSearchData
 
-    private enum CodingKeys: CodingKey {
-        case custom
-        case slots
+    public init(type: DecisionType, data: VisualSearchData) {
+        self.type = type
+        self.data = data
     }
 
-    init(custom: String, slots: [RecsSlot]) {
-        self.custom = custom
-        self.slots = slots
-    }
-
-    public required init(from decoder: any Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let jsonDict = try? container.decodeIfPresent([String: AnyDecodable].self, forKey: .custom) {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonDict.mapValues { $0.value })
-            self.custom = String(data: jsonData, encoding: .utf8) ?? "{}"
-        } else if let jsonArray = try? container.decode([AnyDecodable].self, forKey: .custom) {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray.map { $0.value })
-            self.custom = String(data: jsonData, encoding: .utf8) ?? "[]"
-        } else {
-            self.custom = "{}" // Default empty JSON
-        }
-        self.slots = try container.decode([RecsSlot].self, forKey: .slots)
-
+        self.data = try container.decode(VisualSearchData.self, forKey: .data)
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
+    enum CodingKeys: String, CodingKey {
+        case data
+        case type
+    }
 }
 
-public class QsrProductRecsData: Decodable {
-    public let custom: String
-    public let slots: [QsrProductRecsSlot]
+public class SemanticSearchPayload: Payload {
+    public let type: DecisionType
+    public let data: SemanticSearchData
 
-    private enum CodingKeys: CodingKey {
-        case custom
-        case slots
+    public init(type: DecisionType, data: SemanticSearchData) {
+        self.type = type
+        self.data = data
     }
 
-    init(custom: String, slots: [QsrProductRecsSlot]) {
-        self.custom = custom
-        self.slots = slots
-    }
-
-    public required init(from decoder: any Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        if let jsonDict = try? container.decodeIfPresent([String: AnyDecodable].self, forKey: .custom) {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonDict.mapValues { $0.value })
-            self.custom = String(data: jsonData, encoding: .utf8) ?? "{}"
-        } else if let jsonArray = try? container.decode([AnyDecodable].self, forKey: .custom) {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonArray.map { $0.value })
-            self.custom = String(data: jsonData, encoding: .utf8) ?? "[]"
-        } else {
-            self.custom = "{}" // Default empty JSON
-        }
-        self.slots = try container.decode([QsrProductRecsSlot].self, forKey: .slots)
-
+        self.data = try container.decode(SemanticSearchData.self, forKey: .data)
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
+    enum CodingKeys: String, CodingKey {
+        case data
+        case type
+    }
 }
 
-public class SortingData: Decodable {
-    public let slots: [SortingRecsSlot]
+public class AssistantPayload: Payload {
+    public var type: DecisionType
+    public let data: AssistantData
 
-    private enum CodingKeys: CodingKey {
-        case slots
+    public init(type: DecisionType, data: AssistantData) {
+        self.type = type
+        self.data = data
     }
 
-    public required init(from decoder: any Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.slots = try container.decode([SortingRecsSlot].self, forKey: .slots)
+        self.data = try container.decode(AssistantData.self, forKey: .data)
+        self.type = try container.decode(DecisionType.self, forKey: .type)
     }
 
-    init(slots: [SortingRecsSlot]) {
-        self.slots = slots
+    enum CodingKeys: String, CodingKey {
+        case data
+        case type
     }
-
 }

@@ -20,11 +20,38 @@ public class DYResult {
 }
 
 public class DYChooseResult: DYResult {
-    public let choices: [Choice]?
+    public let choices: [any Choice]?
 
-    internal init(choices: [Choice]?, status: ResultStatus, warning: [Warning]?, error: Error?, rawNetworkData: RawNetworkData?) {
+    internal init(choices: [any Choice]?, status: ResultStatus, warnings: [Warning]?, error: Error?, rawNetworkData: RawNetworkData?) {
         self.choices = choices
-        super.init(status: status, warnings: warning, error: error, rawNetworkData: rawNetworkData)
+        super.init(status: status, warnings: warnings, error: error, rawNetworkData: rawNetworkData)
+    }
+}
+
+public class DYSemanticSearchResult: DYResult {
+    public let choice: SemanticSearchChoice?
+
+    internal init(choice: SemanticSearchChoice?, status: ResultStatus, warnings: [Warning]?, error: Error?, rawNetworkData: RawNetworkData?) {
+        self.choice = choice
+        super.init(status: status, warnings: warnings, error: error, rawNetworkData: rawNetworkData)
+    }
+}
+
+public class DYVisualSearchResult: DYResult {
+    public let choice: VisualSearchChoice?
+
+    internal init(choice: VisualSearchChoice?, status: ResultStatus, warnings: [Warning]?, error: Error?, rawNetworkData: RawNetworkData?) {
+        self.choice = choice
+        super.init(status: status, warnings: warnings, error: error, rawNetworkData: rawNetworkData)
+    }
+}
+
+public class DYAssistantResult: DYResult {
+    public let choices: [AssistantChoice]?
+
+    internal init(choices: [AssistantChoice]?, status: ResultStatus, warnings: [Warning]?, error: Error?, rawNetworkData: RawNetworkData?) {
+        self.choices = choices
+        super.init(status: status, warnings: warnings, error: error, rawNetworkData: rawNetworkData)
     }
 }
 

@@ -16,7 +16,7 @@ public struct ApplicationEventProperties: EventProperties {
     var quantity: UInt
     var cart: [CartInnerItem]?
 
-    public init(value: Float, currency: CurrencyType? = nil, productId: String, quantity: UInt, cart: [CartInnerItem]?) {
+    public init(value: Float, currency: CurrencyType? = nil, productId: String, quantity: UInt, cart: [CartInnerItem]? = nil) {
         self.dyType = "add-to-cart-v1"
         self.value = value
         self.currency = currency

@@ -116,7 +116,7 @@ public class ChooseModel: EndpointModelProtocol {
         let currentImplicitPageview = options?.isImplicitPageview ?? endpointModelProvider.getExperienceConfig().isImplicitPageview
         let currentImplicitImpressionMode = options?.isImplicitImpressionMode ?? endpointModelProvider.getExperienceConfig().isImplicitImpressionMode
 
-        let options =  hasAnyNonNull(
+        let options = hasAnyNonNull(
             currentImplicitPageview,
             options?.returnAnalyticsMetadata,
             currentImplicitImpressionMode,

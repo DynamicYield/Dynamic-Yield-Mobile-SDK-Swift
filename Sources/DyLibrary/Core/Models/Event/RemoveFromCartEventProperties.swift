@@ -17,10 +17,10 @@ public struct RemoveFromCartEventProperties: EventProperties {
 
     public init(
         value: Float,
-        currency: CurrencyType?,
+        currency: CurrencyType? = nil,
         productId: String,
         quantity: UInt,
-        cart: [CartInnerItem]?
+        cart: [CartInnerItem]? = nil
     ) {
         self.dyType = "remove-from-cart-v1"
         self.value = value

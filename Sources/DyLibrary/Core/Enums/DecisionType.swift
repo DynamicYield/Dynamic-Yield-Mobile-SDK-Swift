@@ -12,6 +12,8 @@ public enum DecisionType: String, Codable {
     case recs = "RECS"
     case qsrProductRecs = "QSR_PRODUCT_RECS"
     case sorting = "SORT"
+    case search = "SEARCH"
+    case assistant = "SHOPPING_MUSE"
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -26,6 +28,10 @@ public enum DecisionType: String, Codable {
             self = .qsrProductRecs
         case "SORT":
             self = .sorting
+        case "SEARCH":
+            self = .search
+        case "SHOPPING_MUSE":
+            self = .assistant
         default:
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unknown DecisionType: \(rawValue)")
         }

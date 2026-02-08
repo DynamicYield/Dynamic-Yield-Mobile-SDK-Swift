@@ -8,7 +8,7 @@
 extension Variation {
     public func reportClick(branchId: String? = nil, dayPart: DayPart? = nil) async -> DYResult {
         await DYSdk.shared().engagements.reportClick(
-            decisionId: decisionId,
+            decisionId: decisionId ?? "",
             variation: self.id,
             branchId: branchId,
             dayPart: dayPart
@@ -17,7 +17,7 @@ extension Variation {
 
     public func reportImpression(branchId: String? = nil, dayPart: DayPart? = nil) async -> DYResult {
         await DYSdk.shared().engagements.reportImpression(
-            decisionId: decisionId,
+            decisionId: decisionId ?? "",
             variations: [id],
             branchId: branchId,
             dayPart: dayPart

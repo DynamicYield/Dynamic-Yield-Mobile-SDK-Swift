@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SortOrderType: String, Codable {
-    case asc
-    case desc
+public enum FacetValuesType: String, Codable {
+    case string
+    case number
 }

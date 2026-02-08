@@ -11,16 +11,24 @@ class NetworkManager {
     internal let apiKey: String
     private var dyVersion: String
     internal var timeout: TimeInterval?
+    private var initilized: Bool
 
     private let logger = DYLogger(logCategory: "NetworkManager")
 
-    init(apiKey: String, dyVersion: String) {
+    init(apiKey: String, dyVersion: String, initialized: Bool) {
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
         self.apiKey = apiKey
         self.dyVersion = dyVersion
+        self.initilized = initialized
     }
 
     func sendRequest(endpointModel: EndpointModelProtocol, networkRequestProvider: any NetworkRequestProvider) async throws -> RawNetworkData {
+
+        guard initilized else {
+            logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
+            throw InitializeError.init(isInitialize: false)
+        }
+
         logger.log(#function)
 
         let result: RawNetworkData = try await networkRequestProvider.create(timeoutInterval: timeout).getRequest(

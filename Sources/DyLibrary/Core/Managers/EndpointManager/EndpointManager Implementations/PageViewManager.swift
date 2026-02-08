@@ -32,17 +32,7 @@ public class PageViewManager: EndpointManagerProtocol {
 
     func getWarnings(body: Data?) throws -> [Warning]? {
         logger.log(#function)
-
-        guard let data = body else {
-            return nil
-        }
-
-        do {
-            return try decodingManager.decodeFromString(StringWarnings.self, from: data)?.warnings?.map { Warning(message: $0)}
-        } catch {
-            logger.log(logLevel: .error, "Failed to decode warnings")
-            throw error
-        }
+        return try WarningsDecoder.decodeStringWarnings(body: body, decodingManager: decodingManager)
     }
 
     // MARK: Internal
@@ -50,17 +40,12 @@ public class PageViewManager: EndpointManagerProtocol {
     private func reportPageView(page: Page) async -> DYResult {
         logger.log(#function)
 
-        if !endpointManagerProvider.isSdkInitialized() {
-            logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
-            return DYResult(status: ResultStatus.error, warnings: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
-        }
-
         let endpoint = PageViewModel(
             endpointModelProvider: endpointModelProvider,
             page: page
         )
 
-        return  await sendRequest(endpoint: endpoint)
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider())
     }
 
     // MARK: API

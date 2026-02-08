@@ -22,6 +22,6 @@ public class EncodingPayloadError: Error, CustomStringConvertible {
     }
 
     public var description: String {
-        sourceError?.localizedDescription ?? stringError ?? "DY SDK has occured error during body encoding"
+        sourceError?.localizedDescription ?? stringError ?? "DY SDK has error during body encoding"
     }
 }

@@ -16,6 +16,8 @@ class EndpointModelUtils {
     static let chooseUrl = "serve/user/choose"
     static let pageViewUrl = "collect/user/pageview"
     static let engagementUrl = "collect/user/engagement"
+    static let searchUrl = "serve/user/search"
+    static let AssistantUrl = "serve/user/assistant"
     static let eventUrl = "collect/user/event"
     static let endpointUS = "https://dy-api.com"
     static let endpointEU = "https://dy-api.eu"
