@@ -41,7 +41,9 @@ public class DefaultRecsProductData: RecsProductData {
     public let imageUrl: String?
     public let categories: [String?]?
     public var keywords: [String?]?
+    public let brand: String?
     public var extra: [String: Any?] = [:]
+    public var searchpass: [String?]?
 
     enum CodingKeys: String, CodingKey {
         case productType = "product_type"
@@ -53,9 +55,11 @@ public class DefaultRecsProductData: RecsProductData {
         case imageUrl = "image_url"
         case categories
         case keywords
+        case brand
+        case searchpass
     }
 
-    init(productType: ProductType? = nil, groupId: String?  = nil, name: String?  = nil, url: String?  = nil, price: Float?  = nil, inStock: Bool?  = nil, imageUrl: String? = nil, categories: [String?]?  = nil, keywords: [String?]? = nil, extra: [String: Any?] = [:]) {
+    init(productType: ProductType? = nil, groupId: String?  = nil, name: String?  = nil, url: String?  = nil, price: Float?  = nil, inStock: Bool?  = nil, imageUrl: String? = nil, categories: [String?]?  = nil, keywords: [String?]? = nil, brand: String?  = nil, searchpass: [String?]? = nil, extra: [String: Any?] = [:]) {
         self.productType = productType
         self.groupId = groupId
         self.name = name
@@ -65,7 +69,10 @@ public class DefaultRecsProductData: RecsProductData {
         self.imageUrl = imageUrl
         self.categories = categories
         self.keywords = keywords
+        self.brand = brand
         self.extra = extra
+        self.searchpass = searchpass
+
     }
 
     required public init(from decoder: Decoder) throws {
@@ -79,6 +86,8 @@ public class DefaultRecsProductData: RecsProductData {
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         categories = try container.decodeIfPresent([String].self, forKey: .categories)
         keywords = try container.decodeIfPresent([String].self, forKey: .keywords)
+        brand = try container.decodeIfPresent(String.self, forKey: .brand)
+        searchpass = try container.decodeIfPresent([String].self, forKey: .searchpass)
 
         let rawContainer = try decoder.container(keyedBy: AnyCodingKey.self)
         for key in rawContainer.allKeys {

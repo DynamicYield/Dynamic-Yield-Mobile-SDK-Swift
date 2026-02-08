@@ -11,7 +11,6 @@ public struct Selector: Encodable {
     public var names: [String]?
     public var groups: [String]?
     public var preview: Preview?
-
 }
 
 public struct Preview: Codable {
@@ -27,15 +26,7 @@ public struct Options: Codable {
 
 }
 
-public struct RecsProductDataOptions: Codable {
-    public var skusOnly: Bool?
-    public var fieldFilter: [String]?
-
-    public init(skusOnly: Bool? = nil, fieldFilter: [String]? = nil) {
-        self.skusOnly = skusOnly
-        self.fieldFilter = fieldFilter
-    }
-}
+public class RecsProductDataOptions: ProductDataOptions {}
 
 public struct Branch: Codable {
     public var id: String?

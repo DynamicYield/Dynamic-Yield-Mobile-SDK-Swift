@@ -32,16 +32,7 @@ public class EventsManager: EndpointManagerProtocol {
 
     func getWarnings(body: Data?) throws -> [Warning]? {
         logger.log(#function)
-        guard let data = body else {
-            return nil
-        }
-
-        do {
-            return try decodingManager.decodeFromString(CodeAndMessageWarnings.self, from: data)?.warnings?.map { Warning(code: $0.code, message: $0.message)}
-        } catch {
-            logger.log(logLevel: .error, "Failed to decode warnings")
-            throw error
-        }
+        return try WarningsDecoder.decodeCodeAndMessageWarnings(body: body, decodingManager: decodingManager)
     }
 
     // MARK: API
@@ -53,13 +44,9 @@ public class EventsManager: EndpointManagerProtocol {
     public func reportEvents(events: [DYEvent], branchId: String? = nil, dayPart: DayPart? = nil, orderFulfillment: OrderFulfillment? = nil) async -> DYResult {
         logger.log(#function)
 
-        if !endpointManagerProvider.isSdkInitialized() {
-            logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
-            return DYResult(status: ResultStatus.error, warnings: nil, error: InitializeError(isInitialize: false), rawNetworkData: nil)
-        }
-
         let endpoint = EventModel(endpointModelProvider: endpointModelProvider, events: events, branchId: branchId, dayPart: dayPart, orderFulfillment: orderFulfillment)
-        return await sendRequest(endpoint: endpoint)
+
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider())
     }
 
     public func reportPromoCodeEnterEvent(
