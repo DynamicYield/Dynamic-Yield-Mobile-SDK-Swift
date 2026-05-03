@@ -3,5 +3,6 @@ protocol EndpointManagerProvider {
     func getUser(cuid: String?, cuidType: String?) -> User
     func getExperienceConfig() -> ExperienceConfig
     func updateCookies(cookies: [Cookie]?) -> Bool
+    func isSdkInitialized() -> Bool
     func sendRequest(endpointModel: any EndpointModelProtocol) async throws -> RawNetworkData
 }

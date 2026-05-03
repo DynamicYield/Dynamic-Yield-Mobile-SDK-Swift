@@ -10,9 +10,7 @@ import Foundation
 /// Model class for Assistant requests
 ///
 public class AssistantModel: EndpointModelProtocol {
-    var logger: DYLogger
 
-    var endpointModelProvider: EndpointModelProvider
     private let page: Page
     private let branchId: String?
     private let options: AssistantOptions?
@@ -20,6 +18,13 @@ public class AssistantModel: EndpointModelProtocol {
     private let addDeviceDateTime: Bool
     private let text: String
     private let chatId: String?
+
+    var logger: DYLogger
+    var endpointModelProvider: EndpointModelProvider
+    var httpMethod = HttpMethod.post
+    var logCategory = "Assistant Endpoint"
+    var urlMethod = EndpointModelUtils.AssistantUrl
+    var ignoreWhenMissingActiveConsentAccepted = false
 
     public init(
         endpointModelProvider: EndpointModelProvider,
@@ -44,12 +49,6 @@ public class AssistantModel: EndpointModelProtocol {
 
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
     }
-
-    var httpMethod = HttpMethod.post
-
-    var logCategory = "Assistant Endpoint"
-
-    var urlMethod = EndpointModelUtils.AssistantUrl
 
     func encodingFailureMessage() -> String {
         "encode payload object for assistant variation"

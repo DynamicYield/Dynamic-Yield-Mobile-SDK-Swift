@@ -46,7 +46,7 @@ public class EventsManager: EndpointManagerProtocol {
 
         let endpoint = EventModel(endpointModelProvider: endpointModelProvider, events: events, branchId: branchId, dayPart: dayPart, orderFulfillment: orderFulfillment)
 
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     public func reportPromoCodeEnterEvent(

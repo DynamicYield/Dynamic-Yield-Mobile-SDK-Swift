@@ -45,7 +45,7 @@ public class PageViewManager: EndpointManagerProtocol {
             page: page
         )
 
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     // MARK: API

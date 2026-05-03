@@ -48,7 +48,7 @@ public class SearchManager: EndpointManagerProtocol {
             options: options
         )
 
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: VisualSearchResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: VisualSearchResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     public func semanticSearch(
@@ -57,6 +57,7 @@ public class SearchManager: EndpointManagerProtocol {
         filters: [Filter]? = nil,
         pagination: Pagination,
         sortBy: SortOptions? = nil,
+        enableSpellCheck: Bool = false,
         pageAttributes: [String: PageAttribute]? = nil,
         branchId: String? = nil,
         options: SearchOptions? = nil
@@ -67,13 +68,13 @@ public class SearchManager: EndpointManagerProtocol {
         let endpoint = SearchModel(
             endpointModelProvider: endpointModelProvider,
             page: page,
-            query: SearchQuery.semanticQuery(text, filters, pagination, sortBy),
+            query: SearchQuery.semanticQuery(text, filters, pagination, sortBy, enableSpellCheck),
             pageAttributes: pageAttributes,
             branchId: branchId,
             options: options
         )
 
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: SemanticSearchResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: SemanticSearchResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     // MARK: Override methods

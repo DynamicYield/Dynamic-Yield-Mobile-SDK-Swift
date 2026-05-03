@@ -22,6 +22,8 @@ class ConfigManager {
         locale: String? = nil,
         isImplicitPageview: Bool? = nil,
         isImplicitImpressionMode: Bool? = nil,
+        activeConsentIntegration: Bool = false,
+        activeConsentAccepted: Bool? = nil,
         customUrl: String? = nil
     ) {
         logger.log(logLevel: .trace, LoggingUtils.initLogMessage(type(of: self)))
@@ -36,6 +38,8 @@ class ConfigManager {
             defaultLocale: locale,
             isImplicitPageview: isImplicitPageview,
             isImplicitImpressionMode: isImplicitImpressionMode,
+            activeConsentIntegration: activeConsentIntegration,
+            activeConsentAccepted: activeConsentAccepted,
             customUrl: customUrl
         )
     }
@@ -73,6 +77,11 @@ class ConfigManager {
     internal func setIsImplicitImpressionMode(_ value: Bool?) {
         logger.log("Changing isImplicitImpressionMode to: \(String(describing: value))")
         experienceConfig.isImplicitImpressionMode = value
+    }
+
+    internal func setActiveConsentAccepted(_ value: Bool?) {
+        logger.log("Changing activeConsentAccepted to: \(String(describing: value))")
+        experienceConfig.activeConsentAccepted = value
     }
 
     internal func getExperienceConfig() -> ExperienceConfig {

@@ -43,6 +43,15 @@ public class DYSdk {
 
     private static let initQueue = DispatchQueue(label: "com.dy.initQueue")
 
+    actor SerialRunner {
+        func run(_ work: () async throws -> Void) async rethrows {
+            try await work()
+        }
+    }
+
+    // Usage
+    private let runner = SerialRunner()
+
     // You should not init the DYSdk here. Use `static func initialize`.
     private init(apiKey: String,
                  dataCenter: DataCenter,
@@ -58,6 +67,8 @@ public class DYSdk {
                  networkRequestProvider: any NetworkRequestProvider = HttpNetworkRequestProvider(),
                  loggerEngineManager: LoggerEngine? = nil,
                  customUrl: String? = nil,
+                 activeConsentIntegration: Bool = false,
+                 activeConsentAccepted: Bool? = nil,
                  initialized: Bool
     ) {
 
@@ -77,16 +88,20 @@ public class DYSdk {
                                       locale: locale,
                                       isImplicitPageview: isImplicitPageview,
                                       isImplicitImpressionMode: isImplicitImpressionMode,
+                                      activeConsentIntegration: activeConsentIntegration,
+                                      activeConsentAccepted: activeConsentAccepted,
                                       customUrl: customUrl)
 
         self.version = version
 
         networkManager = NetworkManager(apiKey: apiKey, dyVersion: version.description, initialized: initialized)
 
+        let sessionAndUserManagerProvider = SessionAndUserManagerProviderImplementation(configManager: configManager)
         let sharedDevice = configManager.getExperienceConfig().sharedDevice
-        sessionAndUserManager = SessionAndUserManager(sharedDevice: sharedDevice)
 
-        endpointManagerProvider = EndpointManagerProviderImplementation(configManager: configManager, networkManager: networkManager, sessionAndUserManager: sessionAndUserManager, networkRequestProvider: networkRequestProvider)
+        sessionAndUserManager = SessionAndUserManager(sessionAndUserManagerProvider: sessionAndUserManagerProvider, sharedDevice: sharedDevice)
+
+        endpointManagerProvider = EndpointManagerProviderImplementation(configManager: configManager, networkManager: networkManager, sessionAndUserManager: sessionAndUserManager, networkRequestProvider: networkRequestProvider, initialized: initialized)
 
         choose = ChooseManager(endpointManagerProvider: endpointManagerProvider)
         engagements = EngagementsManager(endpointManagerProvider: endpointManagerProvider)
@@ -111,7 +126,10 @@ public class DYSdk {
                                     isImplicitImpressionMode: Bool? = nil,
                                     version: DyVersion,
                                     networkRequestProvider: any NetworkRequestProvider = HttpNetworkRequestProvider(),
-                                    customUrl: String? = nil) -> Bool {
+                                    customUrl: String? = nil,
+                                    activeConsentIntegration: Bool = false,
+                                    activeConsentAccepted: Bool? = nil
+    ) -> Bool {
         initQueue.sync {
             guard instance == nil && initialized == false else {
                 print("Singleton already initialized")
@@ -131,6 +149,8 @@ public class DYSdk {
                              version: version,
                              networkRequestProvider: networkRequestProvider,
                              customUrl: customUrl,
+                             activeConsentIntegration: activeConsentIntegration,
+                             activeConsentAccepted: activeConsentAccepted,
                              initialized: true)
 
             return true
@@ -148,7 +168,10 @@ public class DYSdk {
                                   locale: String? = nil,
                                   isImplicitPageview: Bool? = nil,
                                   isImplicitImpressionMode: Bool? = nil,
-                                  customUrl: String? = nil) -> Bool {
+                                  customUrl: String? = nil,
+                                  activeConsentIntegration: Bool = false,
+                                  activeConsentAccepted: Bool? = nil
+    ) -> Bool {
 
         initialize(apiKey: apiKey,
                    dataCenter: dataCenter,
@@ -162,7 +185,9 @@ public class DYSdk {
                    isImplicitImpressionMode: isImplicitImpressionMode,
                    version: DyVersion(Version.major, Version.minor, Version.patch),
                    networkRequestProvider: HttpNetworkRequestProvider(),
-                   customUrl: customUrl)
+                   customUrl: customUrl,
+                   activeConsentIntegration: activeConsentIntegration,
+                   activeConsentAccepted: activeConsentAccepted)
     }
 
     // Access method that requires initialization
@@ -277,6 +302,37 @@ public class DYSdk {
 
     public func setIsImplicitImpressionMode(_ value: Bool?) {
         configManager.setIsImplicitImpressionMode(value)
+    }
+
+    public func setActiveConsentAccepted(_ value: Bool?) async {
+        if isInitialized() {
+            await runner.run {
+                if value == configManager.getExperienceConfig().activeConsentAccepted {
+                    return
+                }
+
+                configManager.setActiveConsentAccepted(value)
+                if !configManager.getExperienceConfig().activeConsentIntegration {
+                    return
+                }
+
+                if configManager.getExperienceConfig().sharedDevice == true {
+                    return
+                }
+
+                sessionAndUserManager.updateActiveConsentAccepted(value: value)
+
+                if value == true {
+                    let chooseResult = await choose.chooseVariations(page: Page.otherPage( pageLocation: "Init"))
+                    if chooseResult.status != ResultStatus.success {
+                        logger.log(logLevel: .error, "Failed to generate a session ID and DY ID via the choose call. Subsequent requests will lack a DY ID and session ID until the next successful choose call.")
+
+                    }
+                }
+            }
+        } else {
+            logger.log(logLevel: .critical, InitializeError(isInitialize: false).message)
+        }
     }
 
     public func getConfig() -> ExperienceConfig {

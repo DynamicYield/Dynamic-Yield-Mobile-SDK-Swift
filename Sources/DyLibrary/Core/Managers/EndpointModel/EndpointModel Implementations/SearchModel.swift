@@ -11,19 +11,19 @@ import Foundation
 ///
 public class SearchModel: EndpointModelProtocol {
 
-    var logger: DYLogger
-    var logCategory = "Search Endpoint"
-
-    var endpointModelProvider: EndpointModelProvider
-    var httpMethod = HttpMethod.post
-    var urlMethod = EndpointModelUtils.searchUrl
-
     private let page: Page
     internal let query: SearchQuery
     private let pageAttributes: [String: PageAttribute]?
     private let branchId: String?
     private let options: SearchOptions?
     private let addDeviceDateTime: Bool
+
+    var endpointModelProvider: EndpointModelProvider
+    var logger: DYLogger
+    var logCategory = "Search Endpoint"
+    var httpMethod = HttpMethod.post
+    var urlMethod = EndpointModelUtils.searchUrl
+    var ignoreWhenMissingActiveConsentAccepted = false
 
     public init(
         endpointModelProvider: EndpointModelProvider,

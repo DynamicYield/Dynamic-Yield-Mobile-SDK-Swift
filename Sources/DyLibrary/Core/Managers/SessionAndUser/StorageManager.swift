@@ -46,7 +46,7 @@ class StorageManager {
             try set(userId, forKey: StorageManager.dyidKey, expirationDate: expirationDate)
             self.userId = userId
             self.userIdExpiryTime = expirationDate
-            logger.log("current dyid \(userId) maxAge \(DateFormatter().string(from: expirationDate))")
+            logger.log("dyid updated")
             return true
         } catch {
             logger.log(logLevel: .error, "failed to write dyid \(userId) to storage")

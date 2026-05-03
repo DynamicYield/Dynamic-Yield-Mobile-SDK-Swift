@@ -29,7 +29,7 @@ internal class DecodingManager {
             case .typeMismatch(let type, let context):
                 logger.log("Type mismatch for type \(String(describing: type)). Coding Path: \(context.codingPath)")
             case .valueNotFound(let type, let context):
-                logger.log("Value not found for type %@ \(String(describing: type)). Coding Path: \(context.codingPath)")
+                logger.log("Value not found for type \(String(describing: type)). Coding Path: \(context.codingPath)")
             case .keyNotFound(let key, let context):
                 logger.log("Key '\(String(describing: key))' not found. Coding Path: \(context.codingPath)")
             case .dataCorrupted(let context):
@@ -39,5 +39,4 @@ internal class DecodingManager {
             }
         }
     }
-
 }

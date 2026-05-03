@@ -16,7 +16,7 @@ class HttpNetwork: NetworkRequest {
 
     private let logger = DYLogger(logCategory: "HttpNetwork", logLevel: .info)
 
-    init(_ timeoutInterval: TimeInterval? = nil, urlSession: URLSession = URLSession.shared) {
+    init(_ timeoutInterval: TimeInterval? = nil, urlSession: URLSession) {
         logger.log(logLevel: .trace, LoggingUtils.initLogMessage(type(of: self)))
         if let timeoutInterval = timeoutInterval, timeoutInterval > 0 {
             self.timeoutInterval = timeoutInterval
@@ -35,7 +35,11 @@ class HttpNetwork: NetworkRequest {
             throw NetworkError.invalidURL(message: errorMessage)
         }
 
-        logger.log("request url: \(url), method: \(method)\n payload: \(String(data: payload ?? Data(), encoding: .utf8) ?? "nil"),\n headers: \(headers)")
+        logger.log(logLevel: .debug, "request path: \(LoggingUtils.sanitizeURL(url)), method: \(method), headers: [\(LoggingUtils.formatSafeHeaders(headers))]")
+
+        #if DEBUG
+        logger.log(logLevel: .debug, "payload: \(String(data: payload ?? Data(), encoding: .utf8) ?? "nil")")
+        #endif
 
         var request = URLRequest(url: sessionUrl)
         request.httpMethod = method.rawValue
@@ -55,14 +59,15 @@ class HttpNetwork: NetworkRequest {
 
         // Ensure the response is a valid HTTP response
         guard let httpResponse = response as? HTTPURLResponse else {
-            let errorMessage = "bad server response \(sessionUrl.absoluteString)"
+            let errorMessage = "bad server response"
 
             logger.log(logLevel: .error, errorMessage)
             throw NetworkError.badServerResponse(message: errorMessage)
         }
 
-        let encodingBody = String(data: data, encoding: .utf8)
-        logger.log("got response for url: \(url):\n code: \(httpResponse.statusCode),\n body: \(encodingBody ?? "nil")")
+        #if DEBUG
+        logger.log(logLevel: .debug, "response for path: \(LoggingUtils.sanitizeURL(url)):\n code: \(httpResponse.statusCode),\n body: \(String(data: data, encoding: .utf8) ?? "nil")")
+        #endif
 
         return RawNetworkData(request: request, urlResponse: response, code: httpResponse.statusCode, isSuccessful: 200...299 ~= httpResponse.statusCode, body: data, sdkVersionHeader: headers[EndpointModelUtils.dySdkVersionHeader])
     }

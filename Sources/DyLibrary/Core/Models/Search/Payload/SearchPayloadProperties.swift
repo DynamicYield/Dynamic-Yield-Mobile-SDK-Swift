@@ -32,7 +32,7 @@ public struct SearchOptions: Codable {
 }
 
 public enum SearchQuery: Encodable {
-    case semanticQuery(String, [Filter]? = nil, Pagination, SortOptions? = nil)
+    case semanticQuery(String, [Filter]? = nil, Pagination, SortOptions? = nil, Bool? = false )
     case visualQuery(String, [Filter]? = nil, SortOptions? = nil)
 
     enum SemanticQueryCodingKeys: CodingKey {
@@ -40,6 +40,7 @@ public enum SearchQuery: Encodable {
         case filters
         case pagination
         case sortBy
+        case enableSpellCheck
     }
 
     enum VisualQueryCodingKeys: CodingKey {
@@ -50,11 +51,12 @@ public enum SearchQuery: Encodable {
 
     public func encode(to encoder: any Encoder) throws {
         switch self {
-        case .semanticQuery(let text, let filters, let pagination, let sortBy):
+        case .semanticQuery(let text, let filters, let pagination, let sortBy, let enableSpellCheck):
             var container = encoder.container(keyedBy: SemanticQueryCodingKeys.self)
             try container.encodeIfPresent(text, forKey: .text)
             try container.encodeIfPresent(filters, forKey: .filters)
             try container.encodeIfPresent(pagination, forKey: .pagination)
+            try container.encodeIfPresent(enableSpellCheck, forKey: .enableSpellCheck)
             try container.encodeIfPresent(sortBy, forKey: .sortBy)
         case .visualQuery(let imageBase64, let filters, let sortBy):
             var container = encoder.container(keyedBy: VisualQueryCodingKeys.self)

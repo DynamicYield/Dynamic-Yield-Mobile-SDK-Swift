@@ -17,6 +17,8 @@ public struct ExperienceConfig {
     public internal(set) var defaultLocale: String?
     public internal(set) var isImplicitPageview: Bool?
     public internal(set) var isImplicitImpressionMode: Bool?
+    public internal(set) var activeConsentIntegration: Bool = false
+    public internal(set) var activeConsentAccepted: Bool?
     public internal(set) var customUrl: String?
 
     private let logger = DYLogger(logCategory: "ExperienceConfig")
@@ -31,6 +33,8 @@ public struct ExperienceConfig {
         defaultLocale: String? = nil,
         isImplicitPageview: Bool? = nil,
         isImplicitImpressionMode: Bool? = nil,
+        activeConsentIntegration: Bool = false,
+        activeConsentAccepted: Bool? = nil,
         customUrl: String? = nil
     ) {
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
@@ -44,6 +48,8 @@ public struct ExperienceConfig {
         self.defaultLocale = defaultLocale
         self.isImplicitPageview = isImplicitPageview
         self.isImplicitImpressionMode = isImplicitImpressionMode
+        self.activeConsentIntegration = activeConsentIntegration
+        self.activeConsentAccepted = activeConsentAccepted
         self.customUrl = customUrl
     }
 }

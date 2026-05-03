@@ -10,9 +10,7 @@ import Foundation
 /// Model class for Choose requests
 ///
 public class ChooseModel: EndpointModelProtocol {
-    var logger: DYLogger
 
-    var endpointModelProvider: EndpointModelProvider
     private let selectorNames: [String]?
     private let page: Page
     private let selectorGroups: [String]?
@@ -28,6 +26,13 @@ public class ChooseModel: EndpointModelProtocol {
     private let cuid: String?
     private let cuidType: String?
     private let addDeviceDateTime: Bool
+
+    var endpointModelProvider: EndpointModelProvider
+    var logger: DYLogger
+    var httpMethod = HttpMethod.post
+    var logCategory = "Choose Endpoint"
+    var urlMethod = EndpointModelUtils.chooseUrl
+    var ignoreWhenMissingActiveConsentAccepted = false
 
     public init(
         endpointModelProvider: EndpointModelProvider,
@@ -67,12 +72,6 @@ public class ChooseModel: EndpointModelProtocol {
 
         logger.log(LoggingUtils.initLogMessage(type(of: self)))
     }
-
-    var httpMethod = HttpMethod.post
-
-    var logCategory = "Choose Endpoint"
-
-    var urlMethod = EndpointModelUtils.chooseUrl
 
     func encodingFailureMessage() -> String {
         "encode payload object for choose variation"
