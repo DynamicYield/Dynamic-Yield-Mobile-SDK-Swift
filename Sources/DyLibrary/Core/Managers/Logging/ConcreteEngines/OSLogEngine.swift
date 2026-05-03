@@ -1,6 +1,6 @@
 import OSLog
 
-struct OSLogEngine: LoggerEngine {
+class OSLogEngine: LoggerEngine {
     internal var logLevel: LogLevel
 
     init(_ logLevel: LogLevel) {

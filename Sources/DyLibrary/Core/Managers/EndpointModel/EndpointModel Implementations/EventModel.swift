@@ -10,7 +10,6 @@ import Foundation
 /// Model class for Event requests
 
 class EventModel: EndpointModelProtocol {
-    var logger: DYLogger
 
     private let events: [DYEvent]
     private let branchId: String?
@@ -19,8 +18,10 @@ class EventModel: EndpointModelProtocol {
     private let addDeviceDateTime: Bool
 
     var httpMethod = HttpMethod.post
+    var logger: DYLogger
     var urlMethod = EndpointModelUtils.eventUrl
     var endpointModelProvider: EndpointModelProvider
+    var ignoreWhenMissingActiveConsentAccepted = true
     var logCategory = "Event Endpoint"
 
     init(endpointModelProvider: EndpointModelProvider, events: [DYEvent], branchId: String? = nil, dayPart: DayPart? = nil, orderFulfillment: OrderFulfillment? = nil, addDeviceDateTime: Bool = true) {

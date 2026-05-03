@@ -2,7 +2,7 @@ import os.log
 
 @available(iOS 14.0, *)
 @available(macOS 11.0, *)
-struct SystemLoggerEngine: LoggerEngine {
+class SystemLoggerEngine: LoggerEngine {
     internal var logLevel: LogLevel
     private let logger = Logger(subsystem: "com.dynamicyield.mobileSDK", category: "mobile")
 
@@ -11,7 +11,7 @@ struct SystemLoggerEngine: LoggerEngine {
     }
 
     func dispatchLog(string: String, level: LogLevel) {
-        switch logLevel {
+        switch level {
         case .critical:
             logger.critical("\(string)")
         case .error:

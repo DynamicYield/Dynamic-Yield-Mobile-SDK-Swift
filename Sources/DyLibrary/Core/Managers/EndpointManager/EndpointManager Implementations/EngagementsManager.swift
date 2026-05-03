@@ -51,7 +51,7 @@ public class EngagementsManager: EndpointManagerProtocol {
             branchId: branchId,
             dayPart: dayPart
         )
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: EmptyResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     public func reportClick(

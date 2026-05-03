@@ -64,7 +64,7 @@ public class ChooseManager: EndpointManagerProtocol {
             cuidType: cuidType
         )
 
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: ChooseResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: ChooseResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     // MARK: Override methods

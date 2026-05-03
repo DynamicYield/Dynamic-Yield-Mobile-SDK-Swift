@@ -10,15 +10,16 @@ import Foundation
 /// Model class for Experience requests
 
 class EngagementModel: EndpointModelProtocol {
-    var logger: DYLogger
 
-    var endpointModelProvider: EndpointModelProvider
     private var engagements: [BaseEngagement]
     private var branchId: String?
     private var dayPart: DayPart?
 
+    var endpointModelProvider: EndpointModelProvider
+    var logger: DYLogger
     var httpMethod = HttpMethod.post
     var urlMethod = EndpointModelUtils.engagementUrl
+    var ignoreWhenMissingActiveConsentAccepted = true
     var logCategory = "Engagement Endpoint"
 
     init(endpointModelProvider: EndpointModelProvider, engagements: [BaseEngagement], branchId: String? = nil, dayPart: DayPart? = nil) {

@@ -10,13 +10,14 @@ import Foundation
 /// Model class for PageView requests
 
 class PageViewModel: EndpointModelProtocol {
-    var logger: DYLogger
 
     private var page: Page
 
+    var endpointModelProvider: EndpointModelProvider
+    var logger: DYLogger
     var httpMethod = HttpMethod.post
     var urlMethod = EndpointModelUtils.pageViewUrl
-    var endpointModelProvider: EndpointModelProvider
+    var ignoreWhenMissingActiveConsentAccepted = true
     var logCategory = "Pageview Endpoint"
 
     private let addDeviceDateTime: Bool

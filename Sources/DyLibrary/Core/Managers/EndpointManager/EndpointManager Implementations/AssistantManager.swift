@@ -46,7 +46,7 @@ public class AssistantManager: EndpointManagerProtocol {
             chatId: chatId
         )
 
-        return await sendRequest(endpoint: endpoint, campaignResponseProvider: AssistantResponseProvider())
+        return await sendRequest(endpoint: endpoint, campaignResponseProvider: AssistantResponseProvider(), isSdkInitialize: endpointManagerProvider.isSdkInitialized())
     }
 
     // MARK: Override methods

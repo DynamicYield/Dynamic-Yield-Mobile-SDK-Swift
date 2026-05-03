@@ -111,6 +111,8 @@ public class VisualSearchData: Decodable {
 public class SemanticSearchData: Decodable {
     public let facets: [Facet]?
     public let totalNumResults: Int?
+    public let searchQuery: String?
+    public let normalizedQuery: String?
     public let spellCheckedQuery: String?
     public let slots: [RecsSlot]?
     public let custom: String?
@@ -119,6 +121,8 @@ public class SemanticSearchData: Decodable {
         case facets
         case totalNumResults
         case slots
+        case searchQuery
+        case normalizedQuery
         case spellCheckedQuery
         case custom
     }
@@ -127,6 +131,8 @@ public class SemanticSearchData: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.slots = try container.decodeIfPresent([RecsSlot].self, forKey: .slots)
         self.totalNumResults = try container.decodeIfPresent(Int.self, forKey: .totalNumResults)
+        self.searchQuery = try container.decodeIfPresent(String.self, forKey: .searchQuery)
+        self.normalizedQuery = try container.decodeIfPresent(String.self, forKey: .normalizedQuery)
         self.spellCheckedQuery = try container.decodeIfPresent(String.self, forKey: .spellCheckedQuery)
 
         let anyFacets = try container.decodeIfPresent([AnyFacet].self, forKey: .facets)
@@ -135,9 +141,11 @@ public class SemanticSearchData: Decodable {
         self.custom = try container.decodeCustomJSONAsString(forKey: .custom) ?? nil
     }
 
-    init(facets: [Facet]?, totalNumResults: Int?, spellCheckedQuery: String?, slots: [RecsSlot]?, custom: String?) {
+    init(facets: [Facet]?, totalNumResults: Int?, searchQuery: String?, normalizedQuery: String?, spellCheckedQuery: String?, slots: [RecsSlot]?, custom: String?) {
         self.facets = facets
         self.totalNumResults = totalNumResults
+        self.searchQuery = searchQuery
+        self.normalizedQuery = normalizedQuery
         self.spellCheckedQuery = spellCheckedQuery
         self.slots = slots
         self.custom = custom

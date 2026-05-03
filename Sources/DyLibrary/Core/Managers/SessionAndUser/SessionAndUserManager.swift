@@ -11,6 +11,7 @@ class SessionAndUserManager {
 
     // MARK: Fields
 
+    private let sessionAndUserManagerProvider: SessionAndUserManagerProvider
     private var sharedDevice: Bool?
     private let storageManager: StorageManager
 
@@ -18,23 +19,34 @@ class SessionAndUserManager {
 
     // MARK: Init
 
-    public init(sharedDevice: Bool? = false, userDefaults: UserDefaults = UserDefaults.standard) {
+    public init(sessionAndUserManagerProvider: SessionAndUserManagerProvider, sharedDevice: Bool? = nil, userDefaults: UserDefaults = UserDefaults.standard) {
         logger.log(logLevel: .trace, LoggingUtils.initLogMessage(type(of: self)))
+        self.sessionAndUserManagerProvider = sessionAndUserManagerProvider
         self.sharedDevice = sharedDevice
         self.storageManager = StorageManager(userDefaults: userDefaults)
+
+        if sharedDevice == true {
+            if !storageManager.getUserId().isEmpty {
+                logger.log("Initialization SessionAndUserManager: User is on a shared device, removing the old DY ID since shared devices don't have a persistent DY ID user.")
+                resetUserId()
+            }
+        } else if sessionAndUserManagerProvider.getActiveConsentIntegration() && sessionAndUserManagerProvider.getActiveConsentAccepted() != true {
+            logger.log("Initialization SessionAndUserManager: User has not accepted the consent, resetting session and user data.")
+            resetSessionId()
+            resetUserId()
+        }
     }
 
-    // MARK: SessionAndUserManager
+    // MARK: Methods
 
     func getUser(cuid: String? = nil, cuidType: String? = nil) -> User {
-        let dyid = storageManager.getUserId()
-        logger.log("\(#function) -> \(dyid)")
-        return User(dyid: dyid, sharedDevice: sharedDevice, cuid: cuid, cuidType: cuidType)
+
+        logger.log("\(#function)")
+        return User(dyid: storageManager.getUserId(), sharedDevice: sharedDevice, cuid: cuid, cuidType: cuidType, activeConsentAccepted: getActiveConsentAcceptedValue())
     }
 
     func getSession() -> Session {
-        let session = storageManager.getUserId()
-        logger.log("\(#function) -> \(session)")
+        logger.log("\(#function)")
         return Session(dy: storageManager.getSessionId())
     }
 
@@ -49,7 +61,12 @@ class SessionAndUserManager {
     }
 
     func updateCookies(cookies: [Cookie]?) -> Bool {
-        logger.log("\(#function): \(String(describing: cookies))")
+        logger.log("\(#function)")
+
+        if sharedDevice != true && sessionAndUserManagerProvider.getActiveConsentIntegration() && sessionAndUserManagerProvider.getActiveConsentAccepted() != true {
+            logger.log("updateCookies: User has not accepted the consent, cookies will not be updated.")
+            return true
+        }
 
         var successWriteSession: Bool?
 
@@ -71,5 +88,32 @@ class SessionAndUserManager {
         let result = successWriteUserId == true && successWriteSession == true
         logger.log("\(#function) success? -> \(result)")
         return result
+    }
+
+    func getActiveConsentAcceptedValue() -> Bool? {
+        logger.log("\(#function)")
+        if sharedDevice == true || !sessionAndUserManagerProvider.getActiveConsentIntegration() {
+            return nil
+        } else {
+            return sessionAndUserManagerProvider.getActiveConsentAccepted() ?? false
+        }
+    }
+
+    func updateActiveConsentAccepted(value: Bool?) {
+
+        logger.log("\(#function)")
+
+        if sharedDevice == true {
+            logger.log("${::updateActiveConsentAccepted.name}: Ignore when shared device is true.")
+            return
+        }
+
+        logger.log("${::updateActiveConsentAccepted.name}: Changing activeConsentAccepted to: $value")
+
+        if sessionAndUserManagerProvider.getActiveConsentIntegration() && value != true {
+            logger.log("updateActiveConsentAccepted: User has not accepted the consent, resetting session and user data.")
+            resetSessionId()
+            resetUserId()
+        }
     }
 }

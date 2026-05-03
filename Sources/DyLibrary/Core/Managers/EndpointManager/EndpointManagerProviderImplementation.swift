@@ -6,12 +6,14 @@ struct EndpointManagerProviderImplementation: EndpointManagerProvider {
     private var networkManager: NetworkManager
     private var sessionAndUserManager: SessionAndUserManager
     private var networkRequestProvider: any NetworkRequestProvider
+    private let initialized: Bool
 
-    init(configManager: ConfigManager, networkManager: NetworkManager, sessionAndUserManager: SessionAndUserManager, networkRequestProvider: any NetworkRequestProvider) {
+    init(configManager: ConfigManager, networkManager: NetworkManager, sessionAndUserManager: SessionAndUserManager, networkRequestProvider: any NetworkRequestProvider, initialized: Bool) {
         self.configManager = configManager
         self.networkManager = networkManager
         self.sessionAndUserManager = sessionAndUserManager
         self.networkRequestProvider = networkRequestProvider
+        self.initialized = initialized
     }
 
     // MARK: Experience
@@ -35,4 +37,9 @@ struct EndpointManagerProviderImplementation: EndpointManagerProvider {
     func sendRequest(endpointModel: any EndpointModelProtocol) async throws -> RawNetworkData {
         try await networkManager.sendRequest(endpointModel: endpointModel, networkRequestProvider: networkRequestProvider)
     }
+
+    func isSdkInitialized() -> Bool {
+        initialized
+    }
+
 }

@@ -18,7 +18,8 @@ protocol EndpointManagerProtocol {
 
     func sendRequest<P: ResponseProvider>(
         endpoint: EndpointModelProtocol,
-        campaignResponseProvider: P
+        campaignResponseProvider: P,
+        isSdkInitialize: Bool
     ) async -> P.ResultType where P.ResponseType: Response, P.ResultType: DYResult
 
     func getWarnings(body: Data?) throws -> [Warning]?
@@ -47,9 +48,26 @@ extension EndpointManagerProtocol {
 
     func sendRequest<P: ResponseProvider>(
         endpoint: EndpointModelProtocol,
-        campaignResponseProvider: P
+        campaignResponseProvider: P,
+        isSdkInitialize: Bool
     ) async -> P.ResultType where P.ResponseType: Response, P.ResultType: DYResult {
         logger.log(#function)
+
+        if !isSdkInitialize {
+            logger.log(logLevel: .critical, LoggingUtils.sdkNotInitializedLogMessage(#function))
+            return campaignResponseProvider.getErrorDYResult(error: InitializeError(isInitialize: false))
+        }
+
+        // If there is not an activeConsentAccepted, but the flag is on, we will consider that the user has not accepted the consent, and we will ignore the request
+        if endpoint.ignoreWhenMissingActiveConsentAccepted && endpointManagerProvider.getExperienceConfig().activeConsentIntegration && endpointManagerProvider.getExperienceConfig().activeConsentAccepted != true &&  endpointManagerProvider.getExperienceConfig().sharedDevice != true {
+            logger.log("sendRequest: User has not accepted the consent, request will be ignored.")
+            return campaignResponseProvider.getDYResult(
+                status: ResultStatus.error,
+                warnings: nil,
+                error: MissingActiveConsentError(),
+                rawNetworkData: nil
+            )
+        }
 
         var rawNetworkData: RawNetworkData?
         var warnings: [Warning]?

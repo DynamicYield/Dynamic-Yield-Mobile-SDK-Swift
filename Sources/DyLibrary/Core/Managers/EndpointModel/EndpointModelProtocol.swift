@@ -20,6 +20,7 @@ protocol EndpointModelProtocol {
     var urlMethod: String { get }
 
     var logger: DYLogger { get }
+    var ignoreWhenMissingActiveConsentAccepted: Bool { get }
 
     func getPayload() throws -> Data?
     func getWarnings(body: Data?) throws -> [Warning]?
