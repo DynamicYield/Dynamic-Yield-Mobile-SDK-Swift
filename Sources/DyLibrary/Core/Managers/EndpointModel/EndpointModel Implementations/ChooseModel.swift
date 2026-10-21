@@ -119,13 +119,15 @@ public class ChooseModel: EndpointModelProtocol {
             currentImplicitPageview,
             options?.returnAnalyticsMetadata,
             currentImplicitImpressionMode,
-            recsProductData
+            recsProductData,
+            options?.deduplicateRecommendations
         ) ?
         Options(
             isImplicitPageview: currentImplicitPageview,
             returnAnalyticsMetadata: options?.returnAnalyticsMetadata,
             isImplicitImpressionMode: currentImplicitImpressionMode,
-            recsProductData: recsProductData
+            recsProductData: recsProductData,
+            deduplicateRecommendations: options?.deduplicateRecommendations
         ) : nil
 
         let choosePayloadData = ChoosePayload(
