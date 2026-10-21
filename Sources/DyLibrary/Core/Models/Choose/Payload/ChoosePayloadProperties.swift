@@ -23,6 +23,7 @@ public struct Options: Codable {
     public var returnAnalyticsMetadata: Bool?
     public var isImplicitImpressionMode: Bool?
     public var recsProductData: RecsProductDataOptions?
+    public var deduplicateRecommendations: Bool?
 
 }
 
@@ -53,9 +54,12 @@ public struct ChooseOptions {
     public var returnAnalyticsMetadata: Bool?
     public var isImplicitImpressionMode: Bool?
 
-    public init(isImplicitPageview: Bool? = nil, returnAnalyticsMetadata: Bool? = nil, isImplicitImpressionMode: Bool? = nil) {
+    public var deduplicateRecommendations: Bool?
+
+    public init(isImplicitPageview: Bool? = nil, returnAnalyticsMetadata: Bool? = nil, isImplicitImpressionMode: Bool? = nil, deduplicateRecommendations: Bool? = nil) {
         self.isImplicitPageview = isImplicitPageview
         self.returnAnalyticsMetadata = returnAnalyticsMetadata
         self.isImplicitImpressionMode = isImplicitImpressionMode
+        self.deduplicateRecommendations = deduplicateRecommendations
     }
 }

@@ -6,6 +6,6 @@
 //
 public struct Version {
       public static let major = "1"
-      public static let minor = "5"
+      public static let minor = "6"
       public static let patch = "0"
 }
